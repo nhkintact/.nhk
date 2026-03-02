@@ -29,30 +29,30 @@ FREETYPEINC = /usr/include/freetype2
 #KVMLIB = -lkvm
 
 # Uncomment this for the alpha patch and the winicon patch (BAR_ALPHA_PATCH, BAR_WINICON_PATCH)
-XRENDER = -lXrender
+#XRENDER = -lXrender
 
 # Uncomment this for the mdpcontrol patch / MDPCONTROL_PATCH
 #MPDCLIENT = -lmpdclient
 
 # Uncomment for the pango patch / BAR_PANGO_PATCH
-PANGOINC = `pkg-config --cflags xft pango pangoxft`
-PANGOLIB = `pkg-config --libs xft pango pangoxft`
+#PANGOINC = `pkg-config --cflags xft pango pangoxft`
+#PANGOLIB = `pkg-config --libs xft pango pangoxft`
 
 # Uncomment for the ipc patch / IPC_PATCH
-YAJLLIBS = -lyajl
-YAJLINC = -I/usr/include/yajl
+#YAJLLIBS = -lyajl
+#YAJLINC = -I/usr/include/yajl
 
 # Uncomment this for the rounded corners patch / ROUNDED_CORNERS_PATCH
 #XEXTLIB = -lXext
 
 # Uncomment this for the swallow patch / SWALLOW_PATCH
-XCBLIBS = -lX11-xcb -lxcb -lxcb-res
+#XCBLIBS = -lX11-xcb -lxcb -lxcb-res
 
 # This is needed for the winicon and tagpreview patches / BAR_WINICON_PATCH / BAR_TAGPREVIEW_PATCH
-IMLIB2LIBS = -lImlib2
+#IMLIB2LIBS = -lImlib2
 
 # Uncomment for the banish patch / BANISH_PATCH (for mouse related features)
-XILIB = `pkg-config --libs xi xfixes`
+#XILIB = `pkg-config --libs xi xfixes`
 
 # Uncomment for the bidi patch
 #BDINC = `pkg-config --cflags fribidi`
@@ -65,7 +65,7 @@ LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}  ${XRENDER} ${MPDCLIENT
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
 #CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS   = -std=c99 -march=native -ffast-math -flto -O3 -pedantic -Wall -Wno-unused-function -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
+CFLAGS   = -std=c99 -pedantic -Wall -Wno-unused-function -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
 LDFLAGS  = ${LIBS}
 
 # Solaris
