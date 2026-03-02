@@ -1,0 +1,183 @@
+# lb 
+
+alt + q ; Tab 
+ sh ~/lb -n 
+
+alt + Tab
+ sh ~/lb -v 
+
+alt + q ; alt + Tab 
+  sh ~/lb -c
+
+alt + q ; space
+ sh ~/lb -d 
+
+# [nav]
+
+alt + w ; f
+ warpd --hint
+
+alt + w ; r
+ warpd --normal
+
+alt + w ; slash
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+alt + w ; I
+ rofi -show drun
+
+alt + w ; r
+ spmenu
+
+alt + q ; semicolon
+ st
+
+# [wm]
+
+alt + q ; L  
+# $hould be able to go global
+ slock 
+
+alt + w ; {j,k}
+ dwmc focusstack {+,-}1
+
+alt + {j,k}
+ dwmc focusstack {+,-}1
+alt + w ; {h,l}
+ dwmc setmfact {-,+}0.05
+
+shift + space ; {u,i}
+ dwmc setcfact {-,+}0.85
+
+shift + space ; o 
+ dwmc setcfact
+
+alt + w ; c 
+ dwmc setlayoutex {0,1}
+
+alt + w ; n 
+ dwmc togglebar
+
+
+alt + w ; {1-9}
+ dwmc view {0-9}
+
+shift + space ; {1-9}
+ dwmc tagex {0-9}
+
+alt + q ; {1-9}
+ dwmc tagex {0-9}
+
+alt + w ; {D,W}
+ dwmc {pushdown,pushup} 
+
+alt + {D,W}
+ dwmc {pushdown,pushup} 
+
+alt + w ; space 
+ dwmc togglemax
+
+alt + w ; Return
+ dwmc zoom
+
+alt + w ; e
+ dwmc zoom
+
+alt + w ; {d,w}
+ dwmc focusstack {+,-}1
+
+alt + q ; q 
+ dwmc killclient
+
+alt + w ; q 
+ dwmc killclient
+
+alt + q ; {n,N}  
+ dunstctl {close-all,history-pop}
+
+# [tools]
+
+# TODO:
+# ssh
+# docker
+# git (will probably have it$ command$ end up in vi mode too)
+# vmware/virtual machine
+# lnav
+# debug mode will view log file$. 
+
+# [git]
+
+#alt + q ; g ; a 
+
+alt + q ; g 
+ python ~/cmdlaunch.py -d "~/Downloads/src/" "git clone"
+
+#alt + q ; g ; p 
+#alt + q ; g ; P 
+
+alt + o ; shift + 4 
+ wm -t
+
+alt + q ; backslash ; {b,B}
+ {qutebrowser,torbrowser-launcher} 
+ 
+alt + q ; c 
+ st -e sudo htop
+
+alt + q ; f
+ st -e ranger
+
+alt + q ; w
+ st -e sudo bandwhich
+
+alt + o ; S
+ xterm -e "sudo shutdown now"
+
+alt + o ; R
+ xterm -e "sudo reboot"
+
+alt + q ; colon
+ python ~/cmdlaunch.py ""
+
+alt + q ; p ; a
+ python ~/cmdlaunch.py "yay -a --noconfirm"
+ 
+alt + q ; p ; i
+ python ~/cmdlaunch.py "yay -Syu --noconfirm"
+
+alt + q ; p ; I 
+ python ~/cmdlaunch.py "sudo pacman -Syu --noconfirm"
+
+alt + q ; y ; R
+ python ~/cmdlaunch.py "sudo systemctl restart"
+
+alt + q ; y ; r
+ python ~/cmdlaunch.py "sudo systemctl start"
+
+alt + q ; y ; S
+ python ~/cmdlaunch.py "sudo systemctl stop"
+
+alt + q ; y ; shift + 4
+ python ~/cmdlaunch.py "sudo systemctl status"
+
+alt + q ; y ; e
+ python ~/cmdlaunch.py "sudo systemctl enable"
+
+alt + q ; y ; d
+ python ~/cmdlaunch.py "sudo systemctl disable"
+
+alt + q ; c  
+ rog-control-center
+
+alt + q ; B
+ alacritty -e sudo bleachbit
+
+alt + q ; P 
+ python ~/cmdlaunch.py "pkill -f" 
+
+alt + q ; shift + slash
+ alacritty -e $EDITOR ~/.config/sxhkd/system
+
+alt + q ; ctrl + w 
+ xterm -e "cd ~/suckless/widow2/ && make && sudo make clean install" 
+

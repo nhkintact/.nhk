@@ -1,0 +1,157 @@
+alt + o ; w
+ lb -v
+
+alt + w
+ lb -v
+
+alt + o ; Escape
+ lb -v
+
+# res.conf
+alt + o ; shift + space
+ lb -I
+
+alt + Tab
+# normal
+ lb -v
+
+Super_L
+ lb -v
+
+#Escape 
+# lb -v
+
+alt + o ; backslash ; v
+ lb -V
+
+# [nav]
+
+alt + o ; e
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+alt + o ; i
+ rofi -show drun
+
+# [wm]
+
+alt + o ; Q 
+ dwmc quit
+
+alt + o ; L
+ slock 
+
+alt + {j,k}
+ dwmc focusstack {+,-}1
+ 
+alt + o ; {j,k}
+ dwmc focusstack {+,-}1
+ 
+# alt + o ; {h,l}
+#  dwmc setmfact {-,+}1.1
+ 
+# shift + space ; {u,i}
+#  dwmc setcfact {-,+}0.85
+
+# shift + space ; o 
+#  dwmc setcfact
+
+alt + o ; ctrl + grave 
+ dwmc setlayoutex {0,8}
+ 
+alt + o ; F11 
+ dwmc togglebar
+ 
+alt + o ; {1-9} 
+ dwmc viewex {0-8}
+
+alt + o ; {g ; g,G}
+ dwmc viewex {0,8}
+
+alt + o ; space ; {1-9}
+ dwmc tagex {0-8}
+
+alt + o ; space ; {g ; g,G}
+ dwmc tagex {0,8}
+
+alt + o ; shift + grave
+ dwmc togglemax
+
+alt + o ; c ; w
+ dwmc killclient; rofi -show drun
+
+alt + o ; ctrl + n 
+ dwmc nametag
+
+alt + o ; space ; {j,k}
+ dwmc rotatestack {+,-}1
+
+alt + o ; ctrl + {j,k}
+ dwmc setcfact {+,-}0.45
+
+alt + o ; {J,K}
+ dwmc {pushdown,pushup}
+
+alt + o ; equal
+ dwmc setcfact 
+
+alt + o ; {l,h}
+ dwmc setmfact {+,-}0.18
+
+alt + f
+ hints
+
+alt + o ; f
+ hints
+
+alt + o ; r 
+ hints -m scroll
+
+alt + o ; V 
+ warpd --hint
+
+alt + o ; v 
+ warpd --normal
+
+alt + o ; z 
+ dwmc zoom
+
+alt + o ; y
+ xdotool getactivewindow key "ctrl+c"
+
+alt + o ; Y
+ xdotool getactivewindow key "ctrl+C"
+
+alt + o ; p
+ xdotool getactivewindow key "ctrl+v"
+ 
+alt + o ; q 
+ dwmc killclient
+
+alt + o ; {n,N}  
+ dunstctl {close-all,history-pop}
+
+# [tools]
+alt + o ; shift + 4
+ wm -t 
+ 
+alt + q ; j 
+ alacritty -e journalctl -xb --follow
+
+alt + q ; d
+ alacritty --hold -e dmesg | less
+
+alt + q ; m 
+ alacritty --hold -e sudo htop 
+
+alt + q ; y
+ python ~/cmdlaunch.py "sudo systemctl status" 
+
+alt + q ; l
+ python ~/cmdlaunch.py "lsof | grep" 
+
+alt + q ; t
+ alacritty -e tail /var/log/syslog
+
+
+alt + o ; comma
+ lb -e 

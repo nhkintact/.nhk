@@ -1,0 +1,160 @@
+# [lb]
+
+alt + w ; ctrl + d # debug
+ lb -d
+
+alt + w ; e 
+# normal
+ lb -v
+
+alt + w ; ctrl + i
+ # ins
+ lb -I
+
+# [configs]
+
+alt + q ; z
+ st -e nvim ~/.zshrc
+
+# lbyr
+alt + q ; L ; {l,k}
+ st -e nvim ~/{lb,lbyrkmap.txt}
+
+# lbyr
+alt + q ; backslash ; {a,v,V,s,S,c,i,I,t}
+ st -e nvim ~/.config/sxhkd/{audio,vim,video,system,security,config,ins,vi,task}
+
+# widow
+alt + q ; w ; {w,c,d} 
+ st -e nvim {~/suckless/widow2/config.h,~/.config/warpd/config,~/.config/warpd/dunst/dunstrc}
+
+# compositors
+alt + q ; P   
+ st -e nvim ~/.config/picom.conf	  
+
+# music
+alt + q ; m ; {a,A,b,B,c,d,e,m,n,N,p,r,v,x,plus}
+ st -e nvim .config{/amarok/amarokrc,/audacious/audacious.conf,/beets/config.yaml,/banshee/banshee-1/banshee.conf,/cmus/config,/deadbeef/deadbeef.conf,/exaile/exaile.conf,/mpd/mpd.conf,/mopidy/mopidy.conf,/ncmpcpp/bindings,/ncmpcpp/config,/pithos/pithos.conf,/rhythmbox/rhythmbox.conf,/vlc/vlcrc,/mpprc}
+
+alt + q ; m ; P
+ st -e sudo -e /usr/share/pipewire/pipewire.conf
+
+alt + q ; m ; M 
+ st -e sudo -e /etc/mopidy/mopidy.conf
+
+# video
+alt + q ; v ; {a,b,c,d,m,n,p,P,r,v}
+ st -e nvim .config{/avidemux/avidemux.conf,/baka-mplayer/config,/celluloid/config,/dragonplayer/dragonplayerrc,/mpv/mpv.conf,/nvidia/config,/Plex\ Media\ Player/config.json,/Plex\ Media\ Server/Preferences.xml,/rhythmbox/rhythmbox.conf,/vlc/vlcrc}      
+
+# text
+alt + q ; t ; {e,v}
+ st -e nvim {~/.emacs,~/.vimrc}
+
+# X
+alt + q ; x ; {r,d,t}
+ st -e nvim {~/.Xresources,~/.Xdefauwms,~/.tmux.conf}
+
+alt + q ; x ; m 
+ st -e tmux source-file ~/.tmux.conf
+
+# newsboat
+alt + q ; r ; {n,N}
+ st -e nvim {~/.newsboat/urls,~/.newsboat/config}
+
+# [wm]
+
+#alt + w ; {j,k}
+# dwmc focusstack {+,-}1
+#
+#alt + {j,k}
+# dwmc focusstack {+,-}1
+#
+#alt + w ; {h,l}
+# dwmc setmfact {-,+}0.05
+#
+#shift + space ; {u,i}
+# dwmc setcfact {-,+}0.85
+#
+#shift + space ; o 
+# dwmc setcfact
+#
+#alt + w ; semicolon 
+# dwmc setlayoutex {0,1}
+#
+#alt + w ; n 
+# dwmc togglebar
+#
+#alt + w ; {1-9}
+# dwmc view {0-9}
+#
+#shift + space ; {1-9}
+# dwmc tagex {0-9}
+#
+#alt + q ; {1-9}
+# dwmc tagex {0-9}
+#
+#alt + w ; {D,W}
+# dwmc {pushdown,pushup} 
+#
+#alt + {D,W}
+# dwmc {pushdown,pushup} 
+#
+#alt + w ; space 
+# dwmc togglemax
+#
+#alt + w ; Return
+# dwmc zoom
+#
+#alt + w ; e
+# dwmc zoom
+#
+#alt + w ; {d,w}
+# dwmc focusstack {+,-}1
+#
+#alt + q ; q 
+# dwmc killclient
+#
+#alt + w ; q 
+# dwmc killclient
+#
+#alt + q ; {1-9}
+# dwmc tagex {0-9}
+#
+#alt + w ; {D,W}
+# dwmc {pushdown,pushup} 
+#
+#alt + {D,W}
+# dwmc {pushdown,pushup} 
+#
+#alt + w ; space 
+# dwmc togglemax
+#
+#alt + w ; Return
+# dwmc zoom
+
+alt + w ; o
+ dwmc zoom
+
+alt + w ; {d,w}
+ dwmc focusstack {+,-}1
+
+alt + q ; d 
+ dwmc killclient
+
+alt + q ; {n,N}  
+ dunstctl {close-all,history-pop}
+
+# [tools]
+
+alt + w ; I
+ rofi -show drun
+
+alt + q ; slash
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+alt + q ; colon
+ python ~/cmdlaunch.py "" 
+
+alt + w ; q 
+ st
+

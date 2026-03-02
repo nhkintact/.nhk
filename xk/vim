@@ -1,0 +1,347 @@
+# lb is a modal interface overlay for widow. 
+# need ability to quickly send any one key or macro before returning to normal
+
+# [lb]
+
+shift + space
+ lb -v 
+
+alt + v
+ lb -V
+
+a
+ lb -a
+
+#n 
+# lb -n
+
+Super_L ; y
+ lb -y 
+
+Super_L ; t
+ lb -t
+
+Super_L ; x
+ lb -H 
+
+Super_L ; w 
+ lb -I 
+
+i 
+ lb -i 
+
+I 
+ lb -I 
+
+w 
+ lb -I 
+
+Super_L ; c
+ lb -c 
+
+shift + space
+ lb -v 
+
+# [wm]
+
+ctrl + l 
+ slock
+
+{H,L}
+ dwmc tagmon {-,+}1
+
+ctrl + grave
+ dwmc setlayoutex {8,0}
+
+space ; {1-9} 
+ dwmc tagex {0-8}
+
+space ; {g ; g,G}
+ dwmc tagex {0,8}
+
+{ctrl + a, ctrl + x}
+ dwmc incnmaster {+,-}1
+
+{g ; g,G}
+ dwmc viewex {0,8}
+
+ctrl + w ; n 
+ dwmc nametag
+
+ctrl + w ; shift + 4 
+ dwmc togglesticky
+
+shift + grave
+ dwmc togglemax
+
+F11
+ dwmc togglebar
+
+{1-9} 
+ dwmc viewex {0-8}
+
+{j,k}
+ dwmc focusstack {+,-}1
+
+F9
+ redshift {-O 2444,-x}
+
+ctrl + w ; {j,k}
+ dwmc rotatestack 1{+,-}
+
+{J,K}
+ dwmc {pushdown,pushup}
+
+ctrl + {k,j}
+ dwmc setcfact {+,-}0.45
+
+equal
+ dwmc setcfact 
+
+{l,h}
+ dwmc setmfact {+,-}0.05
+
+z
+ dwmc zoom
+
+W 
+ dwmc togglebar
+
+shift + 1
+ pulsar-termrun
+
+#c ; f
+# lb -i && python ~/cmdlaunch.py "pkill -f" && python ~/cmdlaunch.py -n ""
+
+c ; w
+ dwmc killclient && dmenu-frecency && lb -I
+
+ctrl + n
+ dunstctl close-all
+
+ctrl + b 
+ dunstctl history-pop
+
+# kill windows. pleae. 
+
+q 
+ dwmc killclient
+
+Q
+ dwmc quit
+
+x
+ xkill
+
+R
+ reboot
+
+S
+ shutdown now
+
+# warpd
+
+f
+ hints 
+
+r
+ hints -m scroll
+
+V
+ warpd --hint
+
+v
+ warpd --normal
+
+# [menus]
+
+{slash}
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+o ; a
+ wm -E pulsemixer
+
+# [config] 
+
+comma
+ lb -e; lb -i
+
+# [applications] 
+
+M
+ wm -E cmus && lb -I
+
+o ; m
+ bash ~/.widow/.xt/dmscripts/scripts/dm-youtube
+
+m
+ wm -E glances
+
+o ; k
+ kpmenu
+
+Print ; c 
+ wiconv
+
+Print ; p
+ xpanda
+
+Print ; i
+ wm -ss
+
+Print ; o
+ wm -sf
+
+Print ; v
+ dm-record
+
+Print ; u
+ spmenu -d 
+
+Print ; w
+ spmenu -D
+
+t
+ wm -t && lb -I
+
+{F7,F8}
+ brightnessctl set 20%{-,+}
+
+o ; w
+ nitrogen
+
+o ; f
+ dmenufm -p
+
+o ; F
+ lb -I && wm -E ranger 
+
+o ; semicolon
+ qutebrowser "$(xsel -b)"
+
+o ; comma
+ lb -I && wm -E "vim $HOME/.widow/.src/config.h" 
+
+o ; period
+ lb -I && xterm -e "cd $HOME/.widow/.src && sudo make clean install"
+
+period
+ emojimenu
+
+backslash ; e 
+ wm -e
+
+backslash ; v 
+ wm -E "cmatrix -C white"
+
+backslash ; g
+ wm -g
+
+ctrl + slash
+ wm -se
+
+T
+ spmenu -m
+
+o ; T
+ spmenu -M
+
+o ; {b,B}
+ lb -I && {qutebrowser,torbrowser-launcher}
+
+ctrl + semicolon
+ lb -I && pulsar-termrun
+
+semicolon
+ dmenu-frecency
+
+P
+ wm -E "git clone $(xsel -b) $(dmenufm -t)" 
+
+o ; c
+ equibop
+
+m
+ kitty -e cmus
+
+ctrl + n 
+ lb -I && netmenu 
+
+# need actual marking functionality.
+# $ometing need$ to allow u to mark a currently open file into the nromal mode config for being launched with grave then the letter.
+
+# [netcommz]
+
+n ; c
+ wm -E nmtui
+
+n ; s ; p
+ xterm -hold -e ping 9.9.9.9 -c 8 
+
+n ; v ; c
+ mullvad connect 
+
+n ; v ; d
+ mullvad disconnect 
+
+n ; v ; r 
+ mullvad reconnect
+
+n ; v ; s 
+ mullvad split-tunnel add $(xprop _NET_WM_PID | cut -d' ' -f3)
+
+n ; v ; n
+ notify-send "$(mullvad status)"
+
+n ; s ; P 
+ xterm -hold -e "netstat -tulpn"
+
+n ; m 
+ xterm -hold -e sudo bandwhich
+
+n ; i ; m 
+ wm -E bmon
+
+n ; i ; {u}
+ st -e sudo ifconfig wlp2s0 {up,down}
+
+n ; i ; I
+ xterm -hold -e ifconfig -a 
+ 
+n ; s ; d
+ python ~/cmdlaunch.py "dig @127.0.0.1 +dnssec"
+ 
+n ; ctrl + i 
+ sudo nvim /etc/network/interfaces
+
+n ; u ; w 
+ python ~/cmdlaunch.py "whois"
+
+n ; u ; t
+ python ~/cmdlaunch.py "traceroute" 
+ 
+n ; u ; T
+ python ~/cmdlaunch.py "tcpdump -i"
+ 
+n ; u ; M
+ xterm -hold -e mitmproxy
+ 
+n ; M
+ wireshark
+
+n ; w
+ xterm -hold -e "spiderfoot -l 127.0.0.1:7777"
+
+n ; f 
+ wm -E 'sudo tufw'
+
+# [bookmarks]
+
+grave + c
+ rog-control-center
+
+grave + period
+ wm -E "rm -rf ~/.local/share/recently-used.xbel"
+
+grave + p
+ wm -E "sudo pacman -Syu"

@@ -1,0 +1,106 @@
+alt + Tab
+ lb -v
+
+Super_L
+ lb -v
+
+# audio
+ lb -I
+
+shift + space
+ lb -a
+
+Escape
+ lb -v
+
+d
+ lb -I && slmenu
+
+e
+ reaper
+
+m
+ urxvt -e cmus
+
+M
+ foxtag
+
+u
+ spmenu -d
+
+a 
+ friture
+
+f
+ dmenufm ~/Music/collection
+
+q
+ jamesdsp
+
+ctrl + c
+ wiconv
+
+# [beets]
+
+b ; i
+ wm -E "beet import $HOME/Music/collection/genre"
+
+b ; I
+ wm -E "beet import $HOME/Music/collection/rnd"
+
+b ; l  
+ wm -E "beet list"
+
+b ; m 
+ python ~/cmdlaunch.py "beet modify"
+
+b ; M 
+ python ~/cmdlaunch.py "beet move"
+ 
+b ; u 
+ python ~/cmdlaunch.py -n "beet update"
+
+b ; f 
+ python ~/cmdlaunch.py -n "beet fields"
+
+b ; s
+ python ~/cmdlaunch.py -n "beet stats"
+
+#B
+# fre:ac or disc burn
+
+r 
+ wm -ar
+
+R
+ radiomen 
+
+b
+ wm -E bluetuith && lb -I
+ 
+
+#slash
+ #dmenu for cmus or mpd
+
+{k,j}
+ notify-send $(amixer -D pulse sset Master 5%{+,-})
+
+{K,J}
+ notify-send $(playerctl --player=cmus,chromium,spotify,%any volume 0.1{+,-})
+
+{h,l}
+ playerctl --player=cmus,chromium,spotify,%any position 15{-,+}
+
+{H,L}
+ playerctl --player=cmus,chromium,spotify,%any {previous,next}
+
+p
+ playerctl --player=chromium,cmus,spotify,%any play-pause
+
+A 
+ wm -E pulsemixer
+
+# [config]
+
+comma
+ lb -e && lb -I

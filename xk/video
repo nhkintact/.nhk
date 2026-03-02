@@ -1,0 +1,218 @@
+alt + o ; w
+ lb -v
+
+alt + w
+ lb -v
+
+alt + o ; Escape
+ lb -v
+
+# res.conf
+alt + o ; shift + space
+ lb -V
+
+alt + Tab
+# normal
+ lb -v
+
+Super_L
+ lb -v
+
+# [nav]
+
+alt + o ; e
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+alt + o ; semicolon
+ rofi -show drun
+
+# [wm]
+
+alt + o ; Q 
+ dwmc quit
+
+alt + o ; L
+ slock 
+
+alt + {j,k}
+ dwmc focusstack {+,-}1
+ 
+alt + o ; {j,k}
+ dwmc focusstack {+,-}1
+ 
+# alt + o ; {h,l}
+#  dwmc setmfact {-,+}1.1
+ 
+# shift + space ; {u,i}
+#  dwmc setcfact {-,+}0.85
+
+# shift + space ; o 
+#  dwmc setcfact
+
+alt + o ; ctrl + grave 
+ dwmc setlayoutex {8,0}
+ 
+alt + o ; F11 
+ dwmc togglebar
+ 
+alt + o ; {1-9} 
+ dwmc viewex {0-8}
+
+alt + o ; {g ; g,G}
+ dwmc viewex {0,8}
+
+alt + o ; space ; {1-9}
+ dwmc tagex {0-8}
+
+alt + o ; space ; {g ; g,G}
+ dwmc tagex {0,8}
+
+alt + o ; shift + grave
+ dwmc togglemax
+
+alt + o ; c ; w
+ dwmc killclient; rofi -show drun
+
+alt + o ; ctrl + n 
+ dwmc nametag
+
+alt + o ; space ; {j,k}
+ dwmc rotatestack {+,-}1
+
+alt + o ; ctrl + {j,k}
+ dwmc setcfact {+,-}0.45
+
+alt + o ; {J,K}
+ dwmc {pushdown,pushup}
+
+alt + o ; equal
+ dwmc setcfact 
+
+alt + o ; {l,h}
+ dwmc setmfact {+,-}0.18
+
+alt + f
+ hints
+
+alt + o ; f
+ hints
+
+alt + o ; r 
+ hints -m scroll
+
+alt + o ; V 
+ warpd --hint
+
+alt + o ; v 
+ warpd --normal
+
+alt + o ; z 
+ dwmc zoom
+
+alt + o ; y
+ xdotool getactivewindow key "ctrl+c"
+
+alt + o ; Y
+ xdotool getactivewindow key "ctrl+C"
+
+alt + o ; p
+ xdotool getactivewindow key "ctrl+v"
+ 
+alt + o ; q 
+ dwmc killclient
+
+alt + q ; q 
+ dwmc killclient
+
+alt + o ; {n,N}  
+ dunstctl {close-all,history-pop}
+
+# [tools]
+
+Print ; i
+ wm -ss
+
+Print ; o
+ wm -sf
+
+Print ; r
+ wm -sv
+
+Print ; a
+ wm -ar
+
+ctrl + Print
+ wm -vd
+
+alt + o ; shift + 4
+ wm -t
+
+# [nav]
+
+alt + e
+ hints
+
+alt + E 
+ warpd --normal
+
+alt + w ; v
+ hints -m scroll
+
+alt + w ; e 
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+alt + q ; I
+ rofi -show drun
+
+# [tools]
+
+# [photo]
+
+alt + q ; p
+ nomacs
+
+alt + q ; v
+ mpv
+
+alt + q ; colon
+ python ~/cmdlaunch.py "" 
+
+alt + q ; {w,W}
+ {qutebrowser,torbrowser-launcher} 
+
+alt + q ; y
+ wm -vd
+ 
+alt + q ; p 
+ nomacs
+
+alt + q ; P ; y
+ python ~/cmdlaunch.py -n "yay -Syu --noconfirm" 
+
+alt + q ; P ; m
+ python ~/cmdlaunch.py -n "sudo pacman -Syu --noconfirm" 
+
+alt + q ; r
+ vokoscreenNG
+
+alt + q ; t 
+ python ~/cmdlaunch.py "python ~/t/t.py --task-dir ~/tasks --list tasks -d" 
+
+alt + q ; c
+ handbrake
+
+alt + q ; e
+ kdenlive
+
+# [basic_system]
+
+alt + q ; $  
+ redshift {-O 4300,-x}
+
+alt + w ; x 
+ xkill 
+
+# [config]
+
+alt + w ; comma
+ st -e nvim ~/.config/sxhkd/video

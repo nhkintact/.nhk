@@ -1,0 +1,17 @@
+Escape
+ lb -v 
+
+p
+ lb -I && zathura
+
+T
+ localsend
+
+space
+ lb -I && wm -E "ncdu"
+
+c
+ wm -E "bc -l"
+
+m
+ wm -E "aerc"

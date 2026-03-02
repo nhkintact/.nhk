@@ -1,0 +1,241 @@
+ctrl + o ; w
+ dmenu-frecency 
+
+alt + w
+ lb -v
+
+alt + Escape
+ lb -v
+
+# res.conf
+ctrl + o ; shift + space
+ lb -i
+
+alt + Tab
+# normal
+ lb -v
+
+Super_L
+ lb -v
+
+Awm_R
+ lb -v
+
+ctrl + o ; backslash ; v
+ lb -V
+
+# [nav]
+
+ctrl + o ; slash
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+ctrl + o ; e 
+ emojimenu
+
+ctrl + o ; shift + 1
+ pulsar-termrun
+
+# [wm]
+
+ctrl + o ; L
+ slock 
+
+ctrl + o ; ctrl + l
+ slock 
+
+alt + {j,k}
+ dwmc focusstack {+,-}1
+ 
+ctrl + o ; {j,k}
+ dwmc focusstack {+,-}1
+ 
+# ctrl + o ; {h,l}
+#  dwmc setmfact {-,+}1.1
+ 
+# shift + space ; {u,i}
+#  dwmc setcfact {-,+}0.85
+
+# shift + space ; o 
+#  dwmc setcfact
+
+ctrl + o ; {ctrl + grave}
+ dwmc setlayoutex {8,0}
+ 
+ctrl + o ; F11 
+ dwmc togglebar
+ 
+ctrl + o ; {1-9} 
+ dwmc viewex {0-8}
+
+ctrl + o ; {g ; g,G}
+ dwmc viewex {0,8}
+
+ctrl + o ; space ; {1-9}
+ dwmc tagex {0-8}
+
+ctrl + o ; space ; {g ; g,G}
+ dwmc tagex {0,8}
+
+ctrl + o ; shift + grave
+ dwmc togglemax
+
+ctrl + o ; c ; w
+ dwmc killclient; rofi -show drun
+
+ctrl + o ; ctrl + n 
+ dwmc nametag
+
+ctrl + o ; space ; {j,k}
+ dwmc rotatestack {+,-}1
+
+ctrl + o ; ctrl + {j,k}
+ dwmc setcfact {+,-}0.95
+
+ctrl + o ; {J,K}
+ dwmc {pushdown,pushup}
+
+ctrl + o ; equal
+ dwmc setcfact 
+
+ctrl + o ; {l,h}
+ dwmc setmfact {+,-}0.18
+
+alt + f
+ hints
+
+ctrl + o ; f
+ hints
+
+ctrl + o ; r 
+ hints -m scroll
+
+ctrl + o ; V 
+ warpd --hint
+
+ctrl + o ; v 
+ warpd --normal
+
+ctrl + o ; z 
+ dwmc zoom
+ 
+ctrl + o ; q 
+ dwmc killclient
+
+ctrl + o ; {n,N}  
+ dunstctl {close-all,history-pop}
+
+# [tools]
+# [] checking email (mutt)
+
+Print ; i
+ wm -ss
+
+Print ; o
+ wm -sf
+
+Print ; r
+ wm -sv
+
+Print ; a
+ wm -ar
+
+Print ; u
+ spmenu -d
+
+Print ; v
+ dm-record
+
+Print ; c
+ wiconv
+
+Print ; p
+ wm -E clipse
+
+ctrl + o ; t
+ xterm -s
+
+alt + r
+ wm -e "note.txt"
+
+ctrl + o ; {b,B}
+ {mullvad-browser,torbrowser-launcher} 
+
+ctrl + o ; {semicolon, colon}
+ {mullvad-browser,torbrowser-launcher} $(xsel -b)
+
+ctrl + o ; p
+ qutebrowser "$(xsel -b)"
+
+alt + q ; d
+ gnome-dictionary
+
+alt + q ; f
+ wm -E ranger
+
+alt + q ; y
+ flatpak run io.freetubeapp.FreeTube
+
+ctrl + o ; c
+ equibop
+
+alt + q ; r
+ goodvibes
+
+alt + q ; b
+# book 
+ manuskript 
+
+alt + q ; n
+ wm -E newsboat
+
+alt + q ; m 
+# mail
+ wm -E aerc
+
+alt + q ; c 
+ equibop 
+
+alt + q ; C 
+ rog-control-center ; rog-control-center ; rog-control-center 
+
+alt + q ; k
+ kpmenu
+
+ctrl + o ; backslash ; colon
+ rofi -show drun
+
+# [productivity]  
+
+alt + q ; d 
+ python ~/cmdlaunch.py "python ~/t/t.py --task-dir ~/tasks --list tasks -d" 
+
+ctrl + o ; t 
+ spmenu -m
+
+ctrl + o ; F
+ wm -se
+
+ctrl + o ; shift + 3
+ netmenu
+
+# [system]
+
+{F7,F8}
+ brightnessctl set 20%{-,+}
+
+shift + F8
+ redshift {-O 2300,-x}
+
+ctrl + o ; exclam 
+ python ~/cmdlaunch.py -n "" 
+
+ctrl + o ; x 
+ lb -v && xkill && lb -i
+
+ctrl + o ; P 
+ python ~/cmdlaunch.py "pkill -f" 
+
+# [config]
+
+ctrl + o ; comma
+ lb -e

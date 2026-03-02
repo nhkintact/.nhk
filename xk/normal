@@ -1,0 +1,293 @@
+ijjj# lb is a modal interface overlay for widow. 
+# need ability to quickly send any one key or macro before returning to normal
+
+# [lb]
+
+shift + space
+ lb -v 
+
+backslash ; v
+ lb -V
+
+backslash ; a
+ lb -a
+
+#n 
+# lb -n
+
+backslash ; y
+ lb -y 
+
+backslash ; t
+ lb -t
+
+backslash ; x
+ lb -H 
+
+backslash ; w 
+ lb -I 
+
+i 
+ lb -i 
+
+w 
+ dmenu-frecency
+
+W
+ notify-send $(dmenu-frecency --read-apps)
+
+backslash ; c
+ lb -c 
+
+shift + space
+ lb -v 
+
+# [wm]
+
+a 
+ dwmc viewex +1 && dmenu-frecency 
+
+ctrl + l 
+ slock
+
+{H,L}
+ dwmc tagmon {-,+}1
+
+ctrl + grave
+ dwmc setlayoutex {8,0}
+
+space ; {1-9} 
+ dwmc tagex {0-8}
+
+space ; {g ; g,G}
+ dwmc tagex {0,8}
+
+{ctrl + a, ctrl + x}
+ dwmc incnmaster {+,-}1
+
+{g ; g,G}
+ dwmc viewex {0,8}
+
+ctrl + w ; n 
+ dwmc nametag
+
+ctrl + w ; shift + 4 
+ dwmc togglesticky
+
+shift + grave
+ dwmc togglemax
+
+F11
+ dwmc togglebar
+
+{1-9} 
+ dwmc viewex {0-8}
+
+{j,k}
+ dwmc focusstack {+,-}1
+
+shift + F8
+ redshift {-O 2444,-x}
+
+ctrl + w ; {j,k}
+ dwmc rotatestack 1{+,-}
+
+{J,K}
+ dwmc {pushdown,pushup}
+
+ctrl + {k,j}
+ dwmc setcfact {+,-}0.45
+
+equal
+ dwmc setcfact 
+
+{l,h}
+ dwmc setmfact {+,-}0.05
+
+space ; space
+ dwmc zoom
+
+ctrl + W 
+ dwmc togglebar
+
+shift + 1
+ pulsar-termrun
+
+#c ; f
+# lb -i && python ~/cmdlaunch.py "pkill -f" && python ~/cmdlaunch.py -n ""
+
+c ; w
+ dwmc killclient && dmenu-frecency && lb -i
+
+ctrl + n
+ dunstctl close-all
+
+ctrl + b 
+ dunstctl history-pop
+
+# kill windows. pleae. 
+
+d 
+ dwmc killclient
+
+Z ; Q
+ dwmc quit
+
+ctrl + w ; q
+ dwmc quit
+
+x
+ xkill
+
+R
+ reboot
+
+S
+ shutdown now
+
+# warpd
+
+f
+ hints 
+
+r
+ hints -m scroll
+
+V
+ warpd --hint
+
+v
+ warpd --normal
+
+# [menus]
+
+grave
+ rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
+
+o ; a
+ wm -t pulsemixer
+
+# [config] 
+
+comma
+ lb -e
+
+shift + 8
+ wm -t wm -EE
+
+# [applications] 
+
+M
+ wm -m  
+
+o ; s
+ bash ~/.nhk/.xt/dmscripts/scripts/dm-youtube
+
+m
+ wm -t htop
+
+I
+ wm -t wm -EE ~/.new.txt 
+
+T
+ wm -t wm -EE ~/todo.txt
+
+# need % to cycle thorough all instances (children) of the focused program
+
+o ; k
+ kpmenu
+
+ctrl + w ; p
+ xclipboard
+
+z ; f
+ wm -ss
+
+z ; F
+ wm -sf
+
+q
+ dm-record
+
+z ; y
+ spmenu -d 
+
+Print ; w
+ spmenu -D
+
+z ; r
+ wm -ar
+
+t
+ wm -t 
+
+{F7,F8}
+ brightnessctl set 20%{-,+}
+
+o ; w
+ nitrogen
+
+o ; f
+ wm -t ranger 
+
+o ; semicolon
+ mullvad-browser "$(xsel -b)"
+
+o ; comma
+ wm -t wm -EE ~/.nhk/src/config.h
+
+Z ; Z
+ lb -i && wm -t wm -rb
+
+colon ; w
+ lb -i && wm -t wm -rb
+
+period
+ emojimenu
+
+backslash ; g
+ wm -t nethack
+
+ctrl + r
+ wm -se
+
+T
+ spmenu -m
+
+o ; T
+ spmenu -M
+
+o ; b
+ wm -b
+
+colon ; r
+ spmenu -i 
+
+ctrl + semicolon
+ pulsar-termrun
+
+C
+ wm -t git clone $(xsel -b) $(dmenufm -t)
+
+o ; c
+ equibop
+
+n ; m
+ wm -t sudo bandwhich
+
+n ; b
+ wm -t bluetuith 
+
+N
+ wm -t nmtui
+
+o ; a 
+ wm -E pulsemixer
+
+o ; v
+ wm -t neo-matrix
+
+# need actual marking functionality.
+# $ometing need$ to allow u to mark a currently open file into the nromal mode config for being launched with grave then the letter.
+
+# [bookmarks]

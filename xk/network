@@ -1,0 +1,84 @@
+# [main] 
+
+Escape
+ lb -v
+
+# [applications]
+
+c
+ wm -E nmtui
+
+s ; p
+ xterm -hold -e ping 9.9.9.9 -c 8 
+
+v ; c
+ mullvad connect 
+
+v ; d
+ mullvad disconnect 
+
+v ; r 
+ mullvad reconnect
+
+v ; s 
+ mullvad split-tunnel add $(xprop _NET_WM_PID | cut -d' ' -f3)
+
+v ; n
+ notify-send "$(mullvad status)"
+
+s ; P 
+ xterm -hold -e "netstat -tulpn"
+
+m 
+ xterm -hold -e sudo bandwhich
+
+i ; m 
+ wm -E bmon
+
+i ; {u}
+ st -e sudo ifconfig wlp2s0 {up,down}
+
+i ; I
+ xterm -hold -e ifconfig -a 
+
+b
+ wm -b 
+
+s ; d
+ python ~/cmdlaunch.py "dig @127.0.0.1 +dnssec"
+
+#c ; {l}
+ #cloud launch/kill
+
+#c ; u
+#cloud update/sync
+
+#c ; n
+#cloud folder add
+
+ctrl + i 
+ sudo nvim /etc/network/interfaces
+
+u ; w 
+ python ~/cmdlaunch.py "whois"
+
+u ; t
+ python ~/cmdlaunch.py "traceroute" 
+
+u ; T
+ python ~/cmdlaunch.py "tcpdump -i"
+
+u ; M
+ xterm -hold -e mitmproxy
+
+M
+ wireshark
+
+w
+ xterm -hold -e spiderfoot -l 127.0.0.1:7777"
+ 
+f 
+ wm -E 'sudo tufw'
+
+comma
+ lb -e && lb -I

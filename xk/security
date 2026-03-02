@@ -1,0 +1,127 @@
+# lb 
+i 
+ sh ~/lb -i
+
+alt + n 
+ sh ~/lb -s 
+
+n
+ sh ~/lb -n
+
+Escape
+ sh ~/lb -v 
+
+I
+ sh ~/lb -I 
+
+S
+ sh ~/lb -H 
+
+s
+ sh ~/lb -s 
+
+d
+ sh ~/lb -d 
+
+# dwm
+ctrl + {1,2,3,4,5,6,7,8,9} 
+ dwmc setlayoutex {1,2,3,4,5,6,7,8,9}
+
+m ; {1-9} 
+ dwmc tagex {0-9}
+
+M
+ dwmc togglemax
+
+{1-9} 
+ dwmc view {0-9}
+
+{j,k}
+ dwmc focusstack {+,-}1
+
+{J,K}
+ dwmc {pushdown,pushup}
+
+# resize window left and right
+{h,l}
+ dwmc setmfact {-,+}0.05
+
+Return
+ dwmc zoom
+
+o
+ alacritty
+
+B 
+ dwmc togglebar
+
+# kill windows. pleae. 
+c
+ dwmc killclient
+
+q
+ dwmc killclient
+ 
+# warpd
+f
+ warpd --hint
+
+v
+ warpd --normal
+
+# password_mode
+E ; {1,2}
+ {keepassxc,kleopatra}
+
+p ; d
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx Discord
+
+p ; D
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx Discord --totp
+    
+p ; e
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx ee
+
+p ; E
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx ee --totp
+
+p ; g
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx Github
+
+p ; G
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx Github --totp
+
+p ; M  
+ alacritty -e keepassxc-cli clip ~/Documents/Passwords\ \(1\).kdbx MEGA --totp
+
+r
+ python ~/cmdlaunch.py "sudo pacman -Syu"
+
+V ; c 
+ notify-send "$(mullvad connect)"
+
+V ; d
+ notify-send "$(mullvad disconnect)"
+
+V ; r
+ notify-send "$(mullvad reconnect -w)"
+
+V ; d
+ notify-send "$(mullvad dns get)"
+
+V ; R
+ mullvad factory-reset
+
+alt + q ; g ; c
+ rm -rf ~/.gnupg/*.lock;
+ rm -rf ~/.gnupg/public-keys.d/*.lock
+
+
+w
+  duwstctl close-all
+
+W
+  duwstctl history-pop
+
+shift + slash
+ alacritty -e nvim ~/.config/sxhkd/security

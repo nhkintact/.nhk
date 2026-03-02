@@ -1,0 +1,365 @@
+#!/bin/bash
+LABYRTERM="urxvt"
+LABYRMU="$LABYRTERM -e ncmpcpp"
+LABYREDIT="$LABYRTERM -e vim"
+LABYRWEB="mullvad-browser"
+LABYREDIT="nvim"
+WIDIR="$HOME/.nhk"
+WIDIRCFGDIR="$HOME/.nhk/xt/cfg"
+
+wideps() { # ignore this 
+    case "$1" in
+        "Gentoo")
+            emerge -av sys-devel/base sys-devel/gcc sys-devel/make sys-devel/autoconf sys-devel/automake x11-libs/libX11 x11-libs/libXft x11-libs/libXinerama x11-base/xorg-server x11-apps/xinit
+            ;;
+        "Debian")
+            sudo apt install build-essential libxi-dev libx11-dev libxft-dev libxfixes-dev libxtst-dev libxinerama-dev xorg-dev xinit git libgirepository1.0-dev libxkbcommon-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 pipx
+	    git clone https://github.com/rvaiya/warpd.git
+	    cd warpd
+	    make && sudo make install
+	    [ $XDG_SESSION_TYPE = "wayland" ] && sudo apt install gtk-layer-shell grim && \
+	    pipx ensurepath && \
+	    pipx install git+https://github.com/AlfredoSequeida/hints.git
+            ;;
+        "Fedora")
+            sudo dnf groupinstall "Development Tools" && sudo dnf install libX11-devel libXft-devel libXinerama-devel xorg-x11-server-Xorg xorg-x11-xinit git gcc gobject-introspection-devel cairo-gobject-devel pkg-config python3-devel gtk4 pipx pasystray
+	    [ $XDG_SESSION_TYPE = "x11" ] && sudo dnf install gtk-layer-shell grim
+            pipx ensurepath && \
+            pipx install git+https://github.com/AlfredoSequeida/hints.git
+	    git clone https://github.com/rvaiya/warpd.git
+     	    cd warpd
+	    make -j4 && sudo make install
+            ;;
+        "Alpine")
+            apk add build-base libx11-dev libxft-dev libxinerama-dev xorg-server xinit
+            ;;
+        "Slackware")
+            slackpkg install gcc make autoconf automake libX11 libXft libXinerama xorg-server xinit
+            ;;
+        "OpenBSD")
+            pkg_add gmake autoconf automake libX11 libXft libXinerama xorg-server xinit
+            ;;
+        "FreeBSD")
+            sudo pkg install gcc gmake autoconf automake libX11 libXft libXinerama xorg-server xorg-xinit
+            ;;
+        "Void")
+            sudo xbps-install -S base-devel libX11-devel libXft-devel libXinerama-devel xorg-server xorg-xinit
+            ;;
+        "NixOS")
+            nix-env -iA nixos.gcc nixos.gnumake nixos.autoconf nixos.automake nixos.libX11 nixos.libXft nixos.libXinerama nixos.xorg.xorgserver nixos.xorg.xinit
+            ;;
+        "OpenSUSE")
+            sudo zypper install -t pattern devel_basis && sudo zypper install libX11-devel libXft-devel libXinerama-devel xorg-x11-server xorg-x11-xinit
+            ;;
+	"Arch") 
+            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pangoxft pango pkgconf gobject-introspection gtk4 python-pipx dunst 7zip feh lf xsel mpv mpd ncmpcpp htop brightnessctl redshift rxvt-unicode rofi dmenu slock paru newsboat nvim libwnck3 yajl freetype2 shotgun python-pipx rofi xorg-xsetroot xorg-xclipboard terminus-font ueberzug tmux --noconfirm
+	    paru -S warpd-git dmenufm-git emojimenu bluetuith-git clipse-git dmenu-frecency aerc kpmenu pulsemixer pasystray-git dwmbar-git hacksaw-git shotgun --noconfirm
+            [ $XDG_SESSION_TYPE = "x11" ] \
+	    export HINTS_EXPECTED_BIN_DIR="$HOME/.local/bin" \ 
+	    pipx ensurepath && \
+	    pipx install git+https://github.com/AlfredoSequeida/hints.git && \ 
+            pipx install calcure
+            ;;
+	"DSKIP")
+		pass	
+		;;
+        *)
+            echo "Unsupported distribution or package manager."
+            exit 1
+            ;;
+    esac
+}
+
+case "$1" in
+
+    -e)
+        exec $LABYREDIT $2 &
+        ;;
+
+    -t)
+
+     if [[ $# -gt 1 ]]; then
+	$LABYRTERM -e "${@:2}" &
+     else 
+	$LABYRTERM &
+     fi
+
+     ;;
+
+    -m) 
+	exec $LABYRMU & 
+        ;;
+	
+    -g)
+	
+	URL=$(echo -e "" | dmenu -i -f -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::git")
+	notify-send "GIT: '$URL'"
+	
+	if [ -z "$URL" ]; then
+	    notify-send "GIT: NONE"
+	    exit 1
+	fi
+	
+	REPO=""
+	DIR=""
+	
+
+	if [[ "$URL" =~ ^https?://(github|gitea|codeberg|gitlab)\.com/(.*)/(.*)\.git$ ]]; then
+	    REPO="${BASH_REMATCH[3]}"   
+	    DIR="${BASH_REMATCH[2]}"    
+	elif [[ "$URL" =~ ^([^/]+)/([^/]+)$ ]]; then
+	    DIR="${BASH_REMATCH[1]}"    
+	    REPO="${BASH_REMATCH[2]}"    
+	    URL="https://github.com/${DIR}/${REPO}.git"  
+	else
+	    notify-send "GIT: [URL] OR [[NAME]/[REPO]]." & 
+	    exit 1
+	fi
+	
+	GITDIR="$(dmenufm -t -p)/$REPO"
+	
+
+	if [[ -d "$GITDIR" ]]; then
+	    notify-send "GIT: [DIR_EXI]" &
+	    exit 1
+	fi
+	
+	# Attempt to clone the repository
+	if git clone "$URL" "$GITDIR"; then
+	    notify-send "GIT: $REPO [CLONED]" &
+	else
+	    notify-send "GIT: $REPO [CLFAIL]." & 
+	    exit 1
+	fi
+	;;
+
+    -b)
+	while true; do
+	    QRY=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::url")
+	
+	    if [[ ! -z $QRY ]]; then
+	        if echo "$QRY" | grep -qE "^(http|https)://"; then
+	    	    TOROPT=$(echo -e "clearweb\ntor" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::brw")
+	            if [[ "$TOROPT" == "tor" ]]; then
+	                torb "$QRY" &
+	            else
+	                $LABYRWEB "$QRY" &
+	            fi
+	        else
+	            OPT4WB="$(echo -e "src\nurl" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::opt")"
+	            if [[ $OPT4WB == "src" ]]; then
+			TOROPT=$(echo -e "clearweb\ntor" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::brw")
+	                if [[ "$TOROPT" == "tor" ]]; then
+	                    torb "https://duckduckgo.com/search?q=$(echo "$QRY" | tr ' ' '+')" &
+	                else
+	                    $LABYRWEB "https://duckduckgo.com/search?q=$(echo "$QRY" | tr ' ' '+')" &
+	                fi
+	            elif [[ $OPT4WB == "url" ]]; then
+	                if [[ "$TOROPT" == "tor" ]]; then
+	                    torb "https://$QRY" & 
+	                else
+	                    $LABYRWEB "https://$QRY" & 
+	                fi
+	            fi
+	        fi
+	    else 
+	        echo 'no query.'
+		$LABYRWEB &
+	        break
+	    fi
+    done
+	;;
+	
+    -w)
+	WP="$WIDIR/wp.png"
+	feh $WP --bg-fill &
+        ;;
+
+    -se)
+	FILE="$HOME/.config/widow/.urlquery"
+	
+	if [ ! -f $FILE ]; then
+	    touch $FILE
+	fi
+	
+	FILEOPT=$(cat $FILE)
+	
+	OPTIONS="
+	[
+	${FILEOPT}
+	[ \"+\", \"\" ],
+	[ \"-\",  \"\" ]
+	]
+	"
+	
+	OBJ_LENGTH=$(echo $OPTIONS | jq length)
+	OBJ_MENU=$(echo $OPTIONS | jq -r ".[][0]" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::src")
+	OBJ_QRY=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::query")
+	OBJ_KEYWORDS=$(echo "$OBJ_QRY" | tr " " "+")
+	OBJ_SELECTED=$(echo "$OBJ_MENU" | cut -d' ' -f1)
+	
+	main() {
+	    for i in $(seq 0 $((OBJ_LENGTH - 1))); do
+	        if [ "$OBJ_SELECTED" = "+" ]; then
+	            PREFIXMENU=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::prfx[a]" <&-)
+	            URLQUERY=$(echo "" | dmenu -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::url[b]" <&-)
+	            if [ ! -z "$PREFIXMENU" ]; then
+	                echo "[ \"$PREFIXMENU\", \"$URLQUERY\" ]," >> $FILE
+	            fi
+	
+	        elif [ "$OBJ_SELECTED" = "-" ]; then
+	            OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | head -n -2 | dmenu -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -i -p "::del")
+	            sed -i "/$OBJ_MENU/d" $FILE
+	        fi
+	        
+	        if [ "$OBJ_SELECTED" = "$(echo "$OPTIONS" | jq -r --arg i "$i" '.[($i|tonumber)][0]')" ]; then
+	            URLQUERY=$(echo "$OPTIONS" | jq -r --arg i "$i" '.[($i|tonumber)][1]')
+	            KEYWORDS=$(echo "$OBJ_KEYWORDS")
+	            xdg-open "${URLQUERY}${KEYWORDS}" 2> /dev/null
+	        fi
+	    done
+	}
+	
+	main
+	;;
+
+    -sf)
+	
+        shotgun - | xclip -selection clipboard -t image/png
+        filename=${filename:-$(date +%s)} && \
+        mkdir -p $WIDIR/s/
+        shotgun $WIDIR/s/"$filename.png"
+        ;;
+
+    -ss)
+
+        selection=$(hacksaw -f "-i %i -g %g")
+        shotgun $selection - | xclip -selection clipboard -t image/png
+        filename=${filename:-$(date +%s)} && \
+        mkdir -p $WIDIR/s/
+        shotgun $selection $WIDIR/s/"$filename.png"
+        ;;
+
+
+   -sv)
+
+    	dir=$WIDIR/widow/s/video/
+    	current=$(date +%F_%H-%M-%S)
+    	
+    	mkdir -p "$dir"
+    	hacksaw | {
+    	    IFS=+x read -r w h x y
+    	
+    	    w=$((w + w % 2))
+    	    h=$((h + h % 2))
+    	
+    	    $LABYRTERM -e ffmpeg \
+    	        -v 16            \
+    	        -r 30            \
+    	        -f x11grab       \
+                -s "${w}x${h}"   \
+    	        -i ":0.0+$x,$y"  \
+    	        -preset slow     \
+    	        -c:v libx264        \
+    	        -pix_fmt yuv420p \
+    	        -crf 20          \
+    	        -f pulse -i default \
+    	        "$dir/$current.mp4" & \
+		
+    		}
+	;;
+
+   -ar)
+
+   	   directory=$WIDIR/ar/
+   	   date=$(date +%F_%H-%M-%S)
+	   mkdir -p $directory
+           $LABYRTERM -e ffmpeg -f pulse -i default "$directory/$date".wav
+
+    	;;
+   
+   -pk) 
+         sudo cp -rv /usr/bin/wm $WIDIR/yr/
+         sudo cp -rv /usr/bin/lb $WIDIR/yr/
+         sudo cp -rv /etc/mpd.conf $WIDIRCFGDIR/
+         cp -rv ~/.config/mpd/mpd.conf $WIDIRCFGDIR/
+	 cp -rv ~/.config/sxhkd/* $WIDIR/xk/
+	 cp -rv ~/.config/warpd/config $WIDIRCFGDIR/warpd.config
+	 cp -rv ~/.config/hints/config.json $WIDIRCFGDIR/config.hints.json
+	 cp -rv ~/.config/dunst/dunstrc $WIDIRCFGDIR/
+	 cp -rv ~/.config/polybar/config.ini $WIDIRCFGDIR/polybar.config.ini
+	 cp -rv ~/.local/bin/foxtag $WIDIRCFGDIR/
+	 cp -rv ~/.config/dmenu-frecency/config.json $WIDIRCFGDIR/dmenu-frecency.config.json
+	 cp -rv ~/.config/polybar/config.ini $WIDIRCFGDIR/polybar.config.ini 
+	 cp -rv ~/.Xresources $WIDIRCFGDIR/
+	 cp -rv ~/.config/lf/lfrc $WIDIRCFGDIR/
+	 cp -rv ~/.config/mimi/mimi.conf $WIDIRCFGDIR/
+	 sudo cp -rv /usr/share/dwmbar/ $WIDIRCFGDIR/
+	 cp -rv ~/.local/bin/lfp $WIDIRCFGDIR/
+	 cp -rv ~/.local/bin/foxtag $WIDIR/xt/
+	 cp -rv ~/.local/bin/wiconv $WIDIR/xt/
+	 cp -rv ~/.local/bin/slmenu $WIDIR/xt/
+	 cp -rv ~/.config/hints/config.json $WIDIRCFGDIR/config.hints.json 
+	;;
+
+  -wd)
+	  wideps $2
+	  ;;
+
+  -upk)  
+	 mkdir -p /home/$USER/.config/widow
+	 sudo cp -rv $WIDIR/yr/lb /usr/bin
+	 sudo cp -rv $WIDIR/yr/wm /usr/bin
+	 sudo chmod +x /usr/bin/wm
+	 sudo chmod +x /usr/bin/lb
+	 sudo mkdir -p /usr/share/dwmbar/modules/
+	 sudo cp -rv $WIDIR/xt/dwmbar/modules/keymode /usr/share/dwmbar/modules/ 
+	 sudo cp -rv $WIDIR/xt/dwmbar/config /usr/share/dwmbar/
+	 mkdir -p ~/.config/polybar/
+	 cp -rv $WIDIRCFGDIR/polybar.config.ini ~/.config/polybar/config.ini
+	 mkdir -p ~/.config/dmenu-frecency/
+	 cp -rv $WIDIRCFGDIR/dmenu-frecency.config.json ~/.config/dmenu-frecency/config.json
+	 mkdir -p ~/.config/dunst/
+	 cp -rv $WIDIRCFGDIR/dunstrc ~/.config/dunst/
+	 mkdir -p ~/.config/hints/
+	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json
+	 mkdir -p ~/.config/warpd/
+	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/
+	 mkdir -p ~/.config/sxhkd/
+	 cp -rv $WIDIR/xk/* ~/.config/sxhkd/
+	 mkdir -p ~/.config/lf/
+	 cp -rv $WIDIRCFGDIR/lfrc ~/.config/lf/
+	 mkdir -p ~/.config/mimi
+	 cp -rv $WIDIRCFGDIR/mimi.conf ~/.config/mimi/
+	 mkdir -p ~/.local/bin
+	 cp -rv $WIDIRCFGDIR/lfp ~/.local/bin/
+	 cp -rv $WIDIR/xt/foxtag ~/.local/bin/
+	 cp -rv $WIDIR/xt/wiconv ~/.local/bin/
+         cp -rv $WIDIR/xt/slmenu ~/.local/bin/
+	 cd $WIDIR/src
+         sudo make clean install
+	 sudo mkdir -p /usr/share/xsessions/
+	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/
+	 cd $WIDIR
+         ;;
+
+   -rb)
+	 cd $WIDIR/src
+	 cp -rv $WIDIR/src/production.h config.h
+         sudo make clean install
+	 sudo mkdir -p /usr/share/xsessions/
+	 sudo cp -rv $WIDIR/src/widow.desktop /usr/share/xsessions/
+	 cd $WIDIR
+         ;;
+
+   -EE)
+
+     if [[ $# -gt 1 ]]; then
+	$LABYREDIT "${@:2}" 
+     else 
+	sudo $LABYREDIT $(which wm) 
+     fi
+
+     ;;
+	
+esac 

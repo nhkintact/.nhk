@@ -1,0 +1,92 @@
+#!/bin/bash
+
+CURRENT_MODE=$(ps -o args -p "$(pgrep "sxhkd")" | awk -F'/' '{print $NF}' | sed '/^COMMAND$/d')
+LABYRDIR="$HOME/.config/sxhkd"
+VIM_MODE="$LABYRDIR/normal"     
+VIDEO_MODE="$LABYRDIR/video"
+AUDIO_MODE="$LABYRDIR/audio"
+NETWORK_MODE="$LABYRDIR/network"
+TASK_MODE="$LABYRDIR/task"
+INSERT_MODE="$LABYRDIR/ins"
+CONFIG_MODE="$LABYRDIR/config"
+
+ressx() {
+    pkill sxhkd 
+    if pgrep -x "sxhkd" >/dev/null; then
+ 	echo "keybinding strata established. ^^"
+    else
+	echo "applying keybinding strata."
+    	sxhkd -c "$1" > /dev/null 2>&1 &
+    fi
+}
+
+case "$1" in
+
+    -v)
+
+        ressx "$VIM_MODE" 
+	notify-send "NORMAL"
+        ;;
+
+    -i)
+
+        ressx "$INSERT_MODE" 
+	notify-send "INS"
+        ;;
+
+    -V)
+
+        ressx "$VIDEO_MODE"  
+	notify-send "VIDEO"
+     	;;
+
+    -a) 
+
+        ressx "$AUDIO_MODE" 
+	notify-send "AUD"
+     	;;
+
+    -t)
+
+        ressx "$TASK_MODE" 
+	notify-send "TSK"
+     	;;
+    
+    -n) 
+
+        ressx "$NETWORK_MODE" 
+	notify-send "NET"
+	;;
+
+    -c) 
+        ressx "$CONFIG_MODE" 
+	notify-send "CONF"
+	;;
+
+    -e)
+	wm -t wm -EE $LABYRDIR/$CURRENT_MODE
+	lb -i
+        ;;
+
+    -H)
+        echo "$CURRENT_MODE" &
+        ;;
+
+    -h) 
+
+        echo "Usage: $0 -v | -i | -d | -n | -a | -t | -s"
+        echo "  -v: VIM MODE ENABLE"
+        echo "  -i: INSERT MODE ENABLE"
+        echo "  -a: AUDIO MODE ENABLE"
+        echo "  -V: VIDEO MODE ENABLE"
+	echo "  -n: NETWORK MODE ENABLE"
+        echo "  -t: TASK MODE ENABLE" 
+        echo "  -H: SHOW CURRENT MODE"
+        ;; 
+
+    *)
+        ressx "$VIM_MODE" 
+	notify-send "NORMAL"
+        ;; 
+
+esac
