@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Prints out the current down network traffic in MB
+
+PREFIX=' '
+
+get_down_traffic() {
+    local statdir=${NET_STAT_DIR:-/sys/class/net}
+    local receive1=0 receive2=0
+
+    for iface_path in "$statdir"/*; do
+        iface=$(basename "$iface_path")
+        [[ "$iface" == "lo" ]] && continue
+        rx_file="$iface_path/statistics/rx_bytes"
+        [[ -f "$rx_file" ]] || continue
+        receive1=$((receive1 + $(cat "$rx_file" 2>/dev/null)))
+    done
+
+    sleep 1
+
+    for iface_path in "$statdir"/*; do
+        iface=$(basename "$iface_path")
+        [[ "$iface" == "lo" ]] && continue
+        rx_file="$iface_path/statistics/rx_bytes"
+        [[ -f "$rx_file" ]] || continue
+        receive2=$((receive2 + $(cat "$rx_file" 2>/dev/null)))
+    done
+
+    local kbps=$(((receive2 - receive1) / 1000))
+    echo "$PREFIX${kbps}KB/s"
+}
+
+get_down_traffic

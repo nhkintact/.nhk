@@ -1,0 +1,12 @@
+#!/bin/bash
+
+BLUETOOTH_ON_ICON=''
+
+get_bluetooth()
+{
+    if systemctl is-active bluetooth.service >/dev/null 2>&1; then
+        echo "$BLUETOOTH_ON_ICON"
+    fi
+}
+
+get_bluetooth

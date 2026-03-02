@@ -1,0 +1,14 @@
+#!/bin/bash
+
+INTERNET_ON_ICON=' '
+PING_HOST=${PING_HOST:-8.8.8.8}
+
+get_internet() {
+    if command -v ping >/dev/null 2>&1; then
+        if ping -c 1 -W 1 "$PING_HOST" >/dev/null 2>&1; then
+            echo "$INTERNET_ON_ICON"
+        fi
+    fi
+}
+
+get_internet

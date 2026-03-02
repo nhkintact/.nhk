@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PREFIX=' '
+
+get_default_shell() 
+{
+    echo "${PREFIX}$(basename "$SHELL")"
+}
+
+get_default_shell

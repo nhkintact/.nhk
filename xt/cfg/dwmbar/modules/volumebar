@@ -1,0 +1,52 @@
+#!/bin/bash
+
+VOLUME_WIDTH=9
+VOLUME_SLIDER='⬤'
+VOLUME_RAIL='◯'
+VOLUME_MUTED='muted'
+ALERT='!!!'
+
+get_volume() {
+    local volume muted prefix="" bar=""
+    
+    if command -v wpctl >/dev/null 2>&1; then
+        # PipeWire
+        local sink_info
+        sink_info=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+        volume=$(echo "$sink_info" | awk '{print int($2 * 100)}')
+        [[ "$sink_info" =~ MUTED ]] && muted=true || muted=false
+    elif command -v pactl >/dev/null 2>&1; then
+        # PulseAudio
+        local sink
+        sink=$(pactl get-default-sink)
+        local sink_info
+        sink_info=$(pactl list sinks | grep -A 15 "Name: $sink")
+        volume=$(echo "$sink_info" | grep 'Volume:' | head -n1 | awk '{print $5}' | sed 's/%//')
+        muted=$(echo "$sink_info" | grep 'Mute:' | awk '{print $2}')
+        [[ "$muted" == "yes" ]] && muted=true || muted=false
+    else
+        echo "No audio system found"
+        exit 1
+    fi
+    
+    if $muted; then
+        echo "$VOLUME_MUTED"
+        return
+    fi
+    
+    local slider_pos=$((volume * VOLUME_WIDTH / 100))
+    
+    for ((i=1; i<=VOLUME_WIDTH; i++)); do
+        if ((i <= slider_pos)); then
+            bar+="$VOLUME_SLIDER"
+        else
+            bar+="$VOLUME_RAIL"
+        fi
+    done
+    
+    ((volume > 100)) && prefix="$ALERT"
+    
+    echo "$prefix$bar"
+}
+
+get_volume

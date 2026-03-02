@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+. "$(dirname "$0")/../lib/common.sh"
+
+# Deps:
+# 	curl
+
+
+URL=${WEATHER_URL:-https://v2.wttr.in}
+LOCATION_PARAM=${WEATHER_LOCATION:-}
+QUERY="${URL}${LOCATION_PARAM:+/$LOCATION_PARAM}?format=%l:+%c+%t%20(%C)"
+
+get_weather() {
+    safe_curl "$QUERY" 2 || true
+}
+
+get_weather

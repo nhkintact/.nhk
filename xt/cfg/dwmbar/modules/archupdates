@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+# shellcheck source=../lib/common.sh
+. "$(dirname "$0")/../lib/common.sh"
+# shellcheck source=../lib/cache.sh
+. "$(dirname "$0")/../lib/cache.sh"
+
+PREFIX='  Updates: '
+CACHE_KEY="arch_updates_official"
+CACHE_DURATION=${ARCH_UPDATES_CACHE_SECONDS:-300}
+
+get_updates() {
+    local updates=0
+
+    if command -v checkupdates >/dev/null 2>&1; then
+        updates=$(checkupdates 2>/dev/null | wc -l)
+    fi
+
+    cache_write "$CACHE_KEY" "$updates"
+    echo "$PREFIX$updates"
+}
+
+if cached=$(cache_read "$CACHE_KEY" "$CACHE_DURATION" 2>/dev/null); then
+    echo "$PREFIX$cached"
+else
+    get_updates
+fi

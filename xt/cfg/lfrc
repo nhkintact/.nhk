@@ -1,0 +1,30 @@
+set ratios 1:2:3
+set cleaner ~/.config/lf/cleaner
+set hidden true
+set preview true
+set previewer ~/.config/lf/previewSandbox.sh
+set cleaner ~/.config/lf/cleaner
+set sixel true
+set incsearch true
+set period 1 
+set info size
+set dircounts 
+
+cmd fzf_jump ${{
+    #res="$(find * | fzf --header='Jump to location')"
+    res="$(fzf --walker=file,dir,follow,hidden --walker-skip=.git,node_modules,.Trash)"
+    if [ -n "$res" ]; then
+        if [ -d "$res" ]; then
+            cmd="cd"
+        else
+            cmd="select"
+        fi
+        res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+
+map p : paste; clear
+map <c-o> :fzf_jump
+map a :push %mkdir<space>
+map c :push :cd<space>

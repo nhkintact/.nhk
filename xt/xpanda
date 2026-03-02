@@ -1,0 +1,79 @@
+#!/bin/zsh
+
+# 🐼 shoots are key-value pairs
+STORE="$HOME/.local/share/"
+SHOOTS="xpanda.json"
+FILE="$STORE/$SHOOTS"
+
+# ensure store exists
+mkdir -p "$STORE"
+[[ ! -s "$FILE" ]] && echo '{}' > "$FILE" 
+
+# helper functions
+print_shoot() {
+     key="$1" 
+     value="$2"
+    echo "🌱 $key → $value"
+}
+
+clip_copy() {
+     text="$1"
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo -n "$text" | pbcopy
+    elif [[ "$(uname)" == "Linux" ]]; then 
+        echo -n "$text" | xclip -sel clip
+    fi
+}
+
+clip_paste() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "$(pbpaste)"
+    elif [[ "$(uname)" == "Linux" ]]; then 
+        echo "$(xclip -o -sel clip)"
+    fi
+}
+
+# main operations
+add_shoot() { 
+    # parse args
+    key="$1"
+    value="$2"
+    # append to json file
+    jstring=". + {\"$key\": \"$value\"}"
+    cp "$FILE" "/tmp/xpanda.backup.$(date +%Y-%m-%d_%H-%M-%S)"
+    jq "$jstring" "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+    # ui and clipboard
+    echo "$key" "$value" 
+}
+
+get_shoot() {
+    local key="i$1"
+    jq -r --arg k "$key" '.[$k] //empty' "$FILE"
+}
+
+search_shoots() {
+    jq -r 'to_entries[] | "\(.key) | \(.value)"' "$FILE" |\
+    column -t -s '|' -o '|' | rofi -dmenu -p xpanda -mesg 'Format: key | value'
+}
+
+shoot_key() { echo "$*" | awk -F '|' '{ gsub(/^[ \t]+|[ \t]+$/, "", $1); print $1 }' }
+shoot_val() { echo "$*" | awk -F '|' '{ gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2 }' }
+
+shoot="$(search_shoots)"
+if ! [[ "$shoot" =~ [^[:space:]] ]]; then exit 1; fi
+# check if submitted shoot already exists
+gkey="$(shoot_key $shoot)"
+gvalue="$(shoot_val $shoot)"
+exists="$(get_shoot $gkey)"
+# create and store shoot
+if [[ -z "$exists" ]]; then
+    echo "$gvalue" 
+    # create a new shoot since the one submitted does not exist
+    add_shoot "$gkey" "$gvalue"
+    print_shoot "$gkey" "$gvalue"
+    clip_copy "$gvalue" && notify-send xpanda "Added '$gkey' → '$gvalue' to shoot garden"
+else
+    print_shoot "$gkey" "$exists"
+    clip_copy "$exists" && notify-send xpanda "Copied '$gkey' → '$(get_shoot $gkey)' to clipboard from shoot garden"
+fi
+exit 0

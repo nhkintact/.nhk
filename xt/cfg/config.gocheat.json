@@ -1,0 +1,83 @@
+{
+  "items": [
+    {
+      "title": "reload current configuration: shift + space",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "enter ins mode: i",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "enter audio mode: a",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "open terminal: t",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "activate night light: shift + F8",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "move focus around master/client stk: j/k",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "resize master stack: l/h ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "lock screen (slock): L/ctrl + l",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "switch window layout: ctrl + `",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "move window u/d stack: J/K ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "resize client stk win: ctrl + j/k ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "reset client windsize: = ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "mv window to master stk: space + space ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "hide topbar: F11 ",
+      "tag": "Labyr: Normal"
+    },
+
+    {
+      "title": "windows-like run cmd: !",
+      "tag": "Labyr: Normal"
+    }
+
+  ],
+  "styles": {
+    "subtext": "#6c7086",
+    "accent": "#b4befe"
+  }
+}

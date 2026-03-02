@@ -1,0 +1,17 @@
+#!/bin/bash
+
+PREFIX=' '
+
+get_day_percentage()
+{
+    local hour
+    hour=10#$(date '+%H')
+    local minute
+    minute=10#$(date '+%M')
+    local minutes=$((hour * 60 + minute))
+    local percentage=$(((minutes * 100) / 1440))
+    
+    echo "$PREFIX$percentage%"
+}
+
+get_day_percentage

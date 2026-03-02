@@ -1,0 +1,65 @@
+#!/bin/bash
+
+TERMINAL="xterm -s -e"
+
+audio_formats() {
+    echo -e "mp3\nwav\nflac\naac\nogg\nm4a"
+}
+
+video_formats() {
+    echo -e "mp4\nmkv\navi\nmov\nflv\nwebm\ngif"
+}
+
+input_file=$(echo $(dmenufm -t -p))
+
+if [ -z "$input_file" ]; then
+    echo "No file selected."
+    exit 1
+fi
+
+file_type=$(file --mime-type -b "$input_file")
+
+if [[ ! "$file_type" == audio/* && ! "$file_type" == video/* ]]; then
+    echo "Selected file is neither audio nor video."
+    exit 1
+fi
+
+choice=$(echo -e "vi\nau" | dmenu -nb black -nf white -sb white -sf black -i -p "-->")
+if [[ $choice == "au" ]]; then
+    format=$(audio_formats | dmenu -nb black -nf white -sb white -sf black -i -p "audio_format:")
+elif [[ $choice == "vi" ]]; then
+    format=$(video_formats | dmenu -nb black -nf white -sb white -sf black -i -p "video_format:")
+fi
+
+if [ -z "$format" ]; then
+    echo "No format selected."
+    exit 1
+fi
+
+output_file="${input_file%.*}.$format"
+
+# Audio Conversion
+case $format in
+    mp3)
+        $TERMINAL ffmpeg -i "$input_file" -b:a 320k -map_metadata 0 -id3v2_version 3 "$output_file"
+        ;;
+    opus)
+        $TERMINAL ffmpeg -i "$input_file" -c:a libopus -b:a 320k "$output_file"
+        ;;
+    ogg)
+        $TERMINAL ffmpeg -i "$input_file" -c:a libvorbis -b:a 320k "$output_file"
+        ;;
+    m4a)
+        $TERMINAL ffmpeg -i "$input_file" -c:a aac -b:a 320k -movflags +faststart "$output_file"
+        ;;
+    gif)
+        $TERMINAL ffmpeg -i "$input_file" -filter_complex "[0:v] fps=45,scale=320:-1:flags=lanczos[p];[p] palettegen[palette];[0:v][palette] paletteuse" "$output_file"
+        ;;
+    mp4)
+        $TERMINAL ffmpeg -i "$input_file" -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 256k "$output_file"
+        ;;
+    mkv)
+        $TERMINAL ffmpeg -i "$input_file" -c:v libx265 -crf 21 -preset medium -c:a aac -b:a 320k "$output_file"
+        ;;
+    avi)
+        $TERMINAL ffmpeg

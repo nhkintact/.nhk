@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PREFIX='ﯧ'
+
+get_backlight()
+{
+    if command -v light >/dev/null 2>&1; then
+        brightness=$(light 2>/dev/null)
+        if [[ -n "$brightness" ]]; then
+            echo "$PREFIX ${brightness%.*}%"
+        fi
+    fi
+}
+
+get_backlight

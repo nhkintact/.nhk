@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Prints USER@hostname
+
+PREFIX=' '
+
+get_hostname() {
+    local user host
+    user=${USER:-$(id -un)}
+    host=$(hostname 2>/dev/null)
+    echo "$PREFIX${user}@${host}"
+}
+
+get_hostname

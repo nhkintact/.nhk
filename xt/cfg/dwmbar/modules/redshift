@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Prints out the screen color temperature
+# Requires the redshift package
+
+PREFIX=''
+
+get_redshift() {
+    if ! command -v redshift >/dev/null 2>&1; then
+        echo ""
+        return 0
+    fi
+    temp=$(redshift -p 2> /dev/null | grep -i "temp" | awk '{print $3}')
+    if [[ -n "$temp" ]]; then
+        echo "$PREFIX$temp"
+    else
+        echo ""
+    fi
+    return 0
+}
+
+get_redshift

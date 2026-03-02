@@ -1,0 +1,53 @@
+#!/bin/bash
+
+TERMINAL="wm -t"
+HIST=$HOME/.slmenu_hist
+
+DESTINATION=$(echo $(dmenufm -p -t))
+
+if [ -n "$DESTINATION" ]; then
+    OPTS=("ln" "qu" "dl" "x")
+
+    while true; do
+        SELOPT=$(printf '%s\n' "${OPTS[@]}" | dmenu -fn "Terminus:pixelsize=10" -nb black -nf white -sb white -sf black -p "$(echo $DESTINATION | awk -F/ '{print $NF}')")
+        
+        case "$SELOPT" in
+	    ln)
+		$TERMINAL soulseek login
+		;;
+            qu)
+                QUERY=$(echo "" | dmenu -fn "Terminus:pixelsize=10" -nb black -nf white -sb white -sf black -p '::query')
+                $TERMINAL -e soulseek q "$QUERY"
+		touch $HIST
+		echo $QUERY >> $HIST
+                ;;
+            dl)
+		HISTECHO=$(cat $HIST)
+                CODEC=$(echo -e "MP3\nFLAC" | dmenu -fn "Terminus:pixelsize=10" -nb black -nf white -sb white -sf black -p '::codec')
+		CODEC=$(echo $CODEC | tr '[:upper:]' '[:lower:]')
+		if [ $CODEC = "mp3" ]; then
+                       	QUALITY=$(echo -e "128\n192\n256\n320" | dmenu -fn "Terminus:pixelsize=10" -nb black -nf white -sb white -sf black -p '::quality') 
+		fi
+                
+		QUERY=$(echo -e "$(cat $HIST)" | dmenu -fn "Terminus:pixelsize=10" -nb black -nf white -sb white -sf black -p '::query')
+
+                # Ensure QUERY is set before executing the command
+                if [ -n "$QUERY" ]; then
+		if grep -q "$QUERY" $HIST; then
+                    $TERMINAL -e soulseek d "$QUERY" -d "$DESTINATION" -m "$CODEC" -q "$QUALITY"
+		else
+		    touch $HIST
+		    echo $QUERY >> $HIST
+                    $TERMINAL -e soulseek d "$QUERY" -d "$DESTINATION" -m "$CODEC" -q "$QUALITY"
+		    notify-send "$QUERY finished downloading."
+		fi 
+		else
+		  notify-send "Missing \$QUERY."
+                fi
+                ;;
+	   x)
+             break
+	     ;;
+        esac
+    done
+fi

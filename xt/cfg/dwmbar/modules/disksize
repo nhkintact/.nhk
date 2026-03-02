@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Prints out the total disk memory and the available memory
+
+PREFIX=' '
+
+get_disk() {
+    local df_output
+    df_output=$(df -h --total 2>/dev/null | tail -1)
+    [[ -z "$df_output" ]] && echo "" && return 0
+    TOTAL_SIZE=$(echo "$df_output" | awk '{printf $2}')
+    USED_SIZE=$(echo "$df_output" | awk '{printf $3}')
+    PERCENTAGE=$(echo "$df_output" | awk '{printf $5}')
+
+    echo "$PREFIX$USED_SIZE/$TOTAL_SIZE ($PERCENTAGE)"
+}
+
+get_disk

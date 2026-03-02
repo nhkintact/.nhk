@@ -1,0 +1,48 @@
+{
+    "hints": {
+        "hint_height": 30,
+        "hint_width_padding": 10,
+        "hint_font_size": 15,
+        "hint_font_face": "Liberation Mono",
+        "hint_font_r": 0,
+        "hint_font_g": 0,
+        "hint_font_b": 0,
+        "hint_font_a": 1,
+        "hint_pressed_font_r": 0.7,
+        "hint_pressed_font_g": 0.7,
+        "hint_pressed_font_b": 0.4,
+        "hint_pressed_font_a": 1,
+        "hint_upercase": true,
+        "hint_background_r": 1,
+        "hint_background_g": 1,
+        "hint_background_b": 0.5,
+        "hint_background_a": 0.8
+},
+
+   "backends": {
+       "opencv": {
+           "application_rules": {
+               "default": { "kernel_size": 10 }
+           }
+       }
+   },
+
+    "alphabet": "wecrf",
+    "mouse_move_left": "h",
+    "mouse_move_right": "l",
+    "mouse_move_up": "k",
+    "mouse_move_down": "j",
+    "mouse_scroll_left": "h",
+    "mouse_scroll_right": "l",
+    "mouse_scroll_up": "k",
+    "mouse_scroll_down": "j",
+    "mouse_move_pixel": 10,
+    "mouse_move_pixel_sensitivity": 10,
+    "mouse_move_rampup_time": 0.5,
+    "mouse_scroll_pixel": 5,
+    "mouse_scroll_pixel_sensitivity": 5,
+    "mouse_scroll_rampup_time": 0.5,
+    "overlay_x_offset": 0,
+    "overlay_y_offset": 0,
+    "window_system": "x11"
+}

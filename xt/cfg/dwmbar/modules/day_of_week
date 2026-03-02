@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PREFIX=' '
+
+get_day()
+{
+    echo "$PREFIX $(date '+%a')"
+}
+
+get_day

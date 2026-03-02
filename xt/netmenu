@@ -1,0 +1,146 @@
+#!/bin/bash
+
+case "$1" in
+
+-n)
+
+	IP_ADDRESS=$(echo "" | dmenu -fn 'Liberation Mono' -nb black -nf white -sb white -sf black -p "::scanner")
+	
+	mkdir -p ~/.widow/.hk/
+	
+	options="y\nn"
+	NO_PING=$(echo -e "$options" | dmenu -fn 'Liberation Mono' -nb black -nf white -sb white -sf black -p "::ping")
+	case "$NO_PING" in
+	 y)
+	
+		if [ -n "$IP_ADDRESS" ]; then
+		    alacritty --hold -e sudo nmap -vv --osscan-limit -T2 -A -sS -sV $IP_ADDRESS -oN ~/.widow/.hk/$IP_ADDRESS.txt
+		else
+		    notify-send "???????????????????????????????"
+		fi
+	;;
+	
+ 	 n)
+		if [ -n "$IP_ADDRESS" ]; then
+		    alacritty --hold -e sudo nmap -vv -Pn --osscan-limit -T2 -A -sS -sV $IP_ADDRESS -oN ~/.widow/.hk/$IP_ADDRESS.txt
+		else
+		    notify-send "???????????????????????????????"
+		fi
+	;;	
+	esac
+	 
+
+;;
+
+-p)
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::scanner")
+	
+	mkdir -p ~/.widow/.hk/
+	
+	if [ -n "$DOMAIN" ]; then
+	    alacritty --hold -e ping -c 10 $DOMAIN
+	else
+	    notify-send "????????????????????????????????"
+	fi
+
+;;
+
+-G) 
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::scanner")
+	
+	mkdir -p ~/.widow/.hk/
+	WORDS="/home/hexe/.widow/.hk/.wordlists/Discovery/Web-Content/directory-list-2.3-big.txt"
+	
+	if [ -n "$DOMAIN" ]; then
+		alacritty --hold -e gobuster dir -u "$DOMAIN" -w $WORDS | tee $DOMAIN.txt
+	else
+	    notify-send "????????????????????????????????"
+	fi
+;;
+
+-k)
+	# nikto
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::scanner")
+	mkdir -p ~/.widow/.hk/
+;;	
+
+-w)
+
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::whois")
+
+	if [ -n "$DOMAIN" ]; then
+	    xterm -hold -e whois $DOMAIN
+	else
+	    notify-send "????????????????????????????????"
+	fi
+	;;	
+-tr) 
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::tracer")
+
+	if [ -n "$DOMAIN" ]; then
+	    xterm -hold -e traceroute $DOMAIN
+	else
+	    notify-send "????????????????????????????????"
+	fi
+	;;	
+
+-d) 
+	DOMAIN=$(echo "" | dmenu -nb black -nf white -sb white -sf black -p "::digger")
+
+	if [ -n "$DOMAIN" ]; then
+	    xterm -hold -e dig @127.0.0.1 +dnssec $DOMAIN
+	else
+	    notify-send "????????????????????????????????"
+	fi
+	;;	
+
+-c) 
+
+	xterm -e nmtui
+	;;	
+
+# need ufw lol
+
+# need netstat XD
+
+# need ifconfig holy f*ck
+
+# need git AAAAAAAAAAAAAHHHHH FUCK
+*)
+	
+	options="nmtui\nping\nnmap\ngobuster\nwhois\ntraceroute\ndig"
+	NETMENU=$(echo -e "$options" | dmenu -nb black -nf white -sb white -sf black -p "::scanner")
+	
+	case "$NETMENU" in
+	nmap)
+	  netmenu -n &
+	;;
+
+	gobuster)
+	  netmenu -G &
+	;;
+	
+	ping)
+	  netmenu -p &
+	;;
+
+	whois)
+	  netmenu -w &
+	;;
+
+	traceroute)
+	  netmenu -tr &
+	;;
+
+	dig)
+	  netmenu -d &
+	;;
+
+	nmtui)
+	  netmenu -c &
+	;;
+	
+	esac
+
+
+esac

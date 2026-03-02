@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Set the directory for your music collection
+MUSIC_DIR=~/Music/collection
+
+SELECTED_FILE=$(echo $(dmenufm -t "$MUSIC_DIR"))
+
+if [ -n "$SELECTED_FILE" ]; then
+    TAGS=("Album" "Artist" "Comment" "Genre" "Title" "Track" "Year" "Clear All" "Exit")
+
+	while true; do
+         SELECTED_TAG=$(printf '%s\n' "${TAGS[@]}" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "$(echo $SELECTED_FILE | awk -F/ '{print $NF}')")
+       	 case "$SELECTED_TAG" in
+       	     Album)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::album")
+       	         taffy -l "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Artist)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::artist")
+       	         taffy -r "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Comment)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::comment")
+       	         taffy -c "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Genre)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::genre")
+       	         taffy -g "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Title)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::title")
+       	         taffy -t "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Track)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::track")
+       	         taffy -n "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Year)
+       	         NEW_VALUE=$(echo "" | dmenu -fn "Liberation Mono" -nb black -nf white -sb white -sf black -p "::year")
+       	         taffy -y "$NEW_VALUE" "$SELECTED_FILE"
+       	         ;;
+       	     Clear)
+       	         taffy --clear "$SELECTED_FILE"
+       	         ;;
+       	     Exit)
+       	         break
+       	         ;;
+       	     *)
+       	         echo "Invalid selection."
+       	         ;;
+       	 esac
+	done
+else
+    echo "No file selected."
+fi

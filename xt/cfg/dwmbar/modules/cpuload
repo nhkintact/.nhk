@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PREFIX=' '
+
+get_load()
+{
+    # Read first line of /proc/stat and split into array
+    local cpu_last_line
+    read -r cpu_last_line < /proc/stat
+    # shellcheck disable=SC2206
+    local cpu_last=($cpu_last_line)
+    local cpu_last_sum_parts=("${cpu_last[@]:1}")
+    local cpu_last_sum=$((${cpu_last_sum_parts// /+}))
+    
+    sleep 0.05
+    
+    local cpu_now_line
+    read -r cpu_now_line < /proc/stat
+    # shellcheck disable=SC2206
+    local cpu_now=($cpu_now_line)
+    local cpu_sum_parts=("${cpu_now[@]:1}")
+    local cpu_sum=$((${cpu_sum_parts// /+}))
+    
+    local cpu_delta=$((cpu_sum - cpu_last_sum))
+    local cpu_idle=$((cpu_now[4] - cpu_last[4]))
+    local cpu_used=$((cpu_delta - cpu_idle))
+    
+    if [[ $cpu_delta -eq 0 ]]; then
+        echo "$PREFIX 0%"
+        return
+    fi
+    
+    local cpu_usage=$((100 * cpu_used / cpu_delta))
+    
+    echo "$PREFIX $cpu_usage%"
+}
+
+get_load

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Prints the fan RPM
+# Depends on lm_sensors
+
+PREFIX=' '
+
+get_fan_speed() {
+    if ! command -v sensors >/dev/null 2>&1; then
+        echo ""
+        return 0
+    fi
+    local rpm
+    rpm=$(sensors 2>/dev/null | awk '/fan[0-9]+:\s*[0-9]+\s*RPM/{print $2; exit}')
+    [[ -n "$rpm" ]] && echo "$PREFIX${rpm} RPM"
+}
+
+get_fan_speed

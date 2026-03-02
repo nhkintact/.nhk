@@ -1,0 +1,21 @@
+{
+    "cache-days": 3,
+    "dmenu": "dmenu",
+    "dmenu-args": [
+	"-i",
+	"-fn",
+	"Terminus:pixelsize=10",
+ 	"-nb", 
+	"black",
+	"-nf",
+	"white",
+	"-sb", 
+	"white",
+	"-sf",
+	"black"
+    ],
+    "frecency-visits": 10,
+    "preselect-last-visit": true,
+    "scan-desktop-files": true,
+    "scan-path": true
+}
