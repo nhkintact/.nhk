@@ -1,4 +1,4 @@
-ijjj# lb is a modal interface overlay for widow. 
+/Erek4an-2091**//ijjj# lb is a modal interface overlay for widow. 
 # need ability to quickly send any one key or macro before returning to normal
 
 # [lb]
@@ -122,7 +122,7 @@ c ; w
 ctrl + n
  dunstctl close-all
 
-ctrl + b 
+ctrl + N 
  dunstctl history-pop
 
 # kill windows. pleae. 
@@ -173,7 +173,7 @@ comma
  lb -e
 
 shift + 8
- wm -t wm -EE
+ wm -t wm -t
 
 # [applications] 
 
@@ -187,15 +187,15 @@ m
  wm -t htop
 
 I
- wm -t wm -EE ~/.new.txt 
+ wm -t wm -t ~/.new.txt 
 
 T
- wm -t wm -EE ~/todo.txt
+ wm -t wm -t ~/todo.txt
 
 # need % to cycle thorough all instances (children) of the focused program
 
 o ; k
- kpmenu
+ kpmenu -d $HOME/Documents/Passwords.kdbx
 
 ctrl + w ; p
  xclipboard
@@ -234,7 +234,7 @@ o ; semicolon
  mullvad-browser "$(xsel -b)"
 
 o ; comma
- wm -t wm -EE ~/.nhk/src/config.h
+ wm -t ~/.nhk/src/config.h
 
 Z ; Z
  lb -i && wm -t wm -rb
@@ -282,7 +282,7 @@ N
  wm -t nmtui
 
 o ; a 
- wm -E pulsemixer
+ wm -t pulsemixer
 
 o ; v
  wm -t neo-matrix
