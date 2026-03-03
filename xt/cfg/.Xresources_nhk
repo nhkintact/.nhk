@@ -1,0 +1,52 @@
+##### THIS FILE IS BEING CURRENTLY MANAGED BY URXVTCONFIG #####
+##### CHANGES DONE TO THIS FILE MANUALLY MAY AFFECT THE FUNCTIONALITY ######
+##### PROCEED WITH CAUTION! #####
+
+! special colors
+*.foreground:  #8888ff
+*.background:  #0c121b
+*.cursorColor:  #cfffe5
+! black
+*.color0:      #55ffff
+*.color8:      #ffffff
+! red
+*.color1:      #aaffff
+*.color9:      #00aa7f
+! green
+*.color2:      #5555ff
+*.color10:     #b9e8ff
+! yellow
+*.color3:      #55aaff
+*.color11:     #ffffff
+! blue
+*.color4:      #acadff
+*.color12:     Blue #2
+! magenta
+*.color5:      #b3ffcf
+*.color13:     #b9ffff
+! cyan
+*.color6:      #55ff7f
+*.color14:     #55aaff
+! white
+*.color7:      #5e4774
+*.color15:     #55ffff
+
+URxvt*scrollBar:         false
+URxvt*scrollBar_right:   false
+
+URxvt*transparent:       false
+
+URxvt*depth: 32
+URxvt.background: [23]#0c121b
+
+URxvt.font: xft:Terminus:pixelsize=12
+URxvt.letterSpace: 0
+
+*antialias:  true
+*autohint:   true
+
+URxvt.perl-ext-common: default,matcher
+URxvt.url-launcher: mullvad-browser
+
+URxvt.matcher.button: 1
+
