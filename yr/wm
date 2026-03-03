@@ -11,19 +11,66 @@ WIDIRCFGDIR="$HOME/.nhk/xt/cfg"
 wideps() { # ignore this 
     case "$1" in
         "Gentoo")
-            sudo emerge --ask dev-vcs/git dev-lang/python dev-python/pipx x11-libs/cairo x11-libs/libx11 x11-libs/libxft x11-libs/libxinerama x11-libs/pango x11-libs/gtk+:4 dev-util/pkgconf gobject-introspection x11-misc/dunst app-arch/p7zip media-gfx/feh sys-apps/lf x11-misc/xsel media-video/mpv media-sound/mpd media-sound/ncmpcpp sys-apps/htop app-misc/redshift x11-terms/rxvt-unicode x11-misc/rofi x11-apps/dmenu x11-misc/slock dev-libs/yajl media-libs/freetype media-gfx/shotgun x11-misc/xclipboard media-fonts/terminus-font x11-misc/ueberzug app-multiplexers/tmux x11-libs/libwnck:3 net-news/newsboat app-editors/neovim x11-apps/xrandr x11-apps/xsetroot media-sound/pulsemixe media-sound/pasystray mail-client/aerc media-gfx/shotgun 
+            sudo emerge --ask dev-vcs/git dev-lang/python dev-python/pipx x11-libs/cairo x11-libs/libx11 x11-libs/libxft x11-libs/libxinerama x11-libs/pango x11-libs/gtk+:4 dev-util/pkgconf gobject-introspection x11-misc/dunst app-arch/p7zip media-gfx/feh sys-apps/lf x11-misc/xsel media-video/mpv media-sound/mpd media-sound/ncmpcpp sys-apps/htop app-misc/redshift x11-terms/rxvt-unicode x11-misc/rofi x11-apps/dmenu x11-misc/slock dev-libs/yajl media-libs/freetype media-gfx/shotgun x11-misc/xclipboard media-fonts/terminus-font x11-misc/ueberzug app-multiplexers/tmux x11-libs/libwnck:3 net-news/newsboat app-editors/neovim x11-apps/xrandr x11-apps/xsetroot media-sound/pulsemixer media-sound/pasystray mail-client/aerc media-gfx/shotgun && \
+	git clone https://github.com/huijunchen9260/dmenufm ~/dmenufm && \
+	cd ~/dmenufm && \
+	make && sudo make install && \
+	cd ~/ && \
+	git clone https://github.com/rvaiya/warpd.git && \ 
+	cd warpd/ && \
+	make && sudo make install && \
+	cd ~/ && \
+	rm -rf warpd/ && \
+	curl -LOS "https://raw.githubusercontent.com/whoisYoges/emojimenu/master/allemojis.txt" && \
+	curl -LOS "https://raw.githubusercontent.com/whoisYoges/emojimenu/master/emojimenu" && \
+	chmod +x emojimenu && \
+	sudo mkdir -p /usr/share/emojimenu && \
+	sudo mv allemojis.txt /usr/share/emojimenu/allemojis.txt && \
+	sudo mv emojimenu /usr/local/bin/emojimenu && \
+	git clone https://github.com/darkhz/bluetuith && \
+	cd bluetuith && \ 
+	go build main.go -o bluetuith-bin && \
+	mv bluetuith-bin /usr/bin/bluetuith && \
+	cd ~/ && \ 
+	git clone https://github.com/kspi/dmenu-frecency && \
+	sudo mv dmenu-frecency/dmenu-frecency /usr/bin/ && \
+	curl -fsSL https://dwmbar.robinhirst.qzz.io/install.sh | bash && \
+	cargo install hacksaw && \
+	echo 'complete.'
 	;;
         "Debian")
-            sudo apt install build-essential libxi-dev libx11-dev libxft-dev libxfixes-dev libxtst-dev libxinerama-dev xorg-dev xinit git libgirepository1.0-dev libxkbcommon-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 pipx
-	    git clone https://github.com/rvaiya/warpd.git
-	    cd warpd
-	    make && sudo make install
-	    [ $XDG_SESSION_TYPE = "wayland" ] && sudo apt install gtk-layer-shell grim && \
+            sudo apt install build-essential libxi-dev libxinerama-dev libxft-dev libxfixes-dev libxtst-dev libx11-dev libcairo2-dev libxkbcommon-dev libwayland-dev xorg-dev xserver-xorg mpd mpv xsel feh lf ncmpcpp brightnessctl redshift rofi dmenu slock newsboat neovim xinit git libgirepository1.0-dev gcc pkg-config python3-dev gir1.2-gtk-4.0 pipx gtk-layer-shell grim ibpam0g-dev libxcb-xkb-dev xauth && \
+	    git clone https://github.com/huijunchen9260/dmenufm ~/dmenufm && \
+	    cd ~/dmenufm && \
+	    make && sudo make install && \
+	    cd ~/ && \
+	    git clone https://github.com/rvaiya/warpd.git && \ 
+	    cd warpd/ && \
+	    make && sudo make install && \
+	    cd ~/ && \
+	    rm -rf warpd/ && \
+	    curl -LOS "https://raw.githubusercontent.com/whoisYoges/emojimenu/master/allemojis.txt" && \
+	    curl -LOS "https://raw.githubusercontent.com/whoisYoges/emojimenu/master/emojimenu" && \
+	    chmod +x emojimenu && \
+	    sudo mkdir -p /usr/share/emojimenu && \
+	    sudo mv allemojis.txt /usr/share/emojimenu/allemojis.txt && \
+	    sudo mv emojimenu /usr/local/bin/emojimenu && \
+	    git clone https://github.com/darkhz/bluetuith && \
+	    cd bluetuith && \ 
+	    go build main.go -o bluetuith-bin && \
+	    mv bluetuith-bin /usr/bin/bluetuith && \
+	    cd ~/ && \ 
+	    git clone https://github.com/kspi/dmenu-frecency && \
+	    sudo mv dmenu-frecency/dmenu-frecency /usr/bin/ && \
+	    curl -fsSL https://dwmbar.robinhirst.qzz.io/install.sh | bash && \
+	    cargo install hacksaw && \
+	    [ $XDG_SESSION_TYPE = "x11" ] sudo apt install && \
 	    pipx ensurepath && \
 	    pipx install git+https://github.com/AlfredoSequeida/hints.git
+	    echo 'complete.' 
             ;;
         "Fedora")
-            sudo dnf groupinstall "Development Tools" && sudo dnf install libX11-devel libXft-devel libXinerama-devel xorg-x11-server-Xorg xorg-x11-xinit git gcc gobject-introspection-devel cairo-gobject-devel pkg-config python3-devel gtk4 pipx pasystray
+            sudo dnf groupinstall "Development Tools" && sudo dnf install libX11-devel libXft-devel libXinerama-devel xorg-x11-server-Xorg xorg-x11-xinit git gcc gobject-introspection-devel cairo-gobject-devel pkg-config python3-devel gtk4 pipx pasystray kernel-devel pam-devel libxcb-devel zig xorg-x11-xauth xorg-x11-server brightnessctl
 	    [ $XDG_SESSION_TYPE = "x11" ] && sudo dnf install gtk-layer-shell grim
             pipx ensurepath && \
             pipx install git+https://github.com/AlfredoSequeida/hints.git
@@ -53,13 +100,13 @@ wideps() { # ignore this
             sudo zypper install -t pattern devel_basis && sudo zypper install libX11-devel libXft-devel libXinerama-devel xorg-x11-server xorg-x11-xinit
             ;;
 	"Arch") 
-            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pangoxft pango pkgconf gobject-introspection gtk4 python-pipx dunst 7zip feh lf xsel mpv mpd ncmpcpp htop brightnessctl redshift rxvt-unicode rofi dmenu slock paru newsboat nvim libwnck3 yajl freetype2 shotgun python-pipx rofi xorg-xsetroot xorg-xclipboard terminus-font ueberzug tmux --noconfirm
-	    paru -S warpd-git dmenufm-git emojimenu bluetuith-git clipse-git dmenu-frecency aerc kpmenu pulsemixer pasystray-git dwmbar-git hacksaw-git shotgun --noconfirm
+            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pangoxft pango pkgconf gobject-introspection gtk4 python-pipx dunst 7zip feh lf xsel mpv mpd ncmpcpp htop brightnessctl redshift rxvt-unicode rofi dmenu slock paru newsboat nvim libwnck3 yajl freetype2 shotgun python-pipx rofi xorg-xsetroot xorg-xclipboard terminus-font ueberzug tmux --noconfirm && \
+	    paru -S warpd-git dmenufm-git emojimenu bluetuith-git dmenu-frecency aerc kpmenu pulsemixer pasystray-git dwmbar-git hacksaw-git shotgun --noconfirm && \
             [ $XDG_SESSION_TYPE = "x11" ] \
-	    export HINTS_EXPECTED_BIN_DIR="$HOME/.local/bin" \ 
+	    export HINTS_EXPECTED_BIN_DIR="$HOME/.local/bin" && \ 
 	    pipx ensurepath && \
 	    pipx install git+https://github.com/AlfredoSequeida/hints.git && \ 
-            pipx install calcure
+            pipx install calcure  
             ;;
 	"DSKIP")
 		pass	
@@ -306,6 +353,7 @@ case "$1" in
 	 cp -rv ~/.local/bin/wiconv $WIDIR/xt/
 	 cp -rv ~/.local/bin/slmenu $WIDIR/xt/
 	 cp -rv ~/.config/hints/config.json $WIDIRCFGDIR/config.hints.json 
+	 echo 'complete. configurations have been backed up.' 
 	;;
 
   -wd)
@@ -313,45 +361,46 @@ case "$1" in
 	  ;;
 
   -upk)  
-	 mkdir -p /home/$USER/.config/widow
-	 sudo cp -rv $WIDIR/yr/lb /usr/bin
-	 sudo cp -rv $WIDIR/yr/wm /usr/bin
-	 sudo chmod +x /usr/bin/wm
-	 sudo chmod +x /usr/bin/lb
-	 sudo mkdir -p /usr/share/dwmbar/modules/
-	 sudo cp -rv $WIDIR/xt/dwmbar/modules/keymode /usr/share/dwmbar/modules/ 
-	 sudo cp -rv $WIDIR/xt/dwmbar/config /usr/share/dwmbar/
-	 mkdir -p ~/.config/polybar/
-	 cp -rv $WIDIRCFGDIR/polybar.config.ini ~/.config/polybar/config.ini
-	 mkdir -p ~/.config/dmenu-frecency/
-	 cp -rv $WIDIRCFGDIR/dmenu-frecency.config.json ~/.config/dmenu-frecency/config.json
-	 mkdir -p ~/.config/dunst/
-	 cp -rv $WIDIRCFGDIR/dunstrc ~/.config/dunst/
-	 mkdir -p ~/.config/hints/
-	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json
-	 mkdir -p ~/.config/warpd/
-	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/config
-	 mkdir -p ~/.config/sxhkd/
-	 cp -rv $WIDIR/xk/* ~/.config/sxhkd/
-	 mkdir -p ~/.config/lf/
-	 cp -rv $WIDIRCFGDIR/lfrc ~/.config/lf/
-	 mkdir -p ~/.config/mimi
-	 cp -rv $WIDIRCFGDIR/mimi.conf ~/.config/mimi/
-	 mkdir -p ~/.local/bin
-	 cp -rv $WIDIRCFGDIR/lfp ~/.local/bin/
-	 cp -rv $WIDIR/xt/foxtag ~/.local/bin/
-	 cp -rv $WIDIR/xt/wiconv ~/.local/bin/
-         cp -rv $WIDIR/xt/slmenu ~/.local/bin/
-	 cp -rv $WIDIRCFGDIR/.Xresources_nhk $HOME/
-	 xrdb -merge ~/.Xresources_nhk
-	 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-	 cp -rv $WIDIRCFGDIR/.nhktx.conf ~/
-	 tmux source-file ~/.nhktx.conf 
-	 cd $WIDIR/src
-         sudo make clean install
-	 sudo mkdir -p /usr/share/xsessions/
-	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/
-	 cd $WIDIR
+	 mkdir -p /home/$USER/.config/widow && \ 
+	 sudo cp -rv $WIDIR/yr/lb /usr/bin && \
+	 sudo cp -rv $WIDIR/yr/wm /usr/bin && \
+	 sudo chmod +x /usr/bin/wm && \
+	 sudo chmod +x /usr/bin/lb && \
+	 sudo mkdir -p /usr/share/dwmbar/modules/ && \ 
+	 sudo cp -rv $WIDIR/xt/dwmbar/modules/keymode /usr/share/dwmbar/modules/ && \
+	 sudo cp -rv $WIDIR/xt/dwmbar/config /usr/share/dwmbar/ && \
+	 mkdir -p ~/.config/polybar/ && \
+	 cp -rv $WIDIRCFGDIR/polybar.config.ini ~/.config/polybar/config.ini && \
+	 mkdir -p ~/.config/dmenu-frecency/ && \
+	 cp -rv $WIDIRCFGDIR/dmenu-frecency.config.json ~/.config/dmenu-frecency/config.json && \
+	 mkdir -p ~/.config/dunst/ && \
+	 cp -rv $WIDIRCFGDIR/dunstrc ~/.config/dunst/ && \
+	 mkdir -p ~/.config/hints/ && \
+	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json && \
+	 mkdir -p ~/.config/warpd/ && \
+	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/config && \
+	 mkdir -p ~/.config/sxhkd/ && \ 
+	 cp -rv $WIDIR/xk/* ~/.config/sxhkd/ && \ 
+	 mkdir -p ~/.config/lf/ && \
+	 cp -rv $WIDIRCFGDIR/lfrc ~/.config/lf/ && \
+	 mkdir -p ~/.config/mimi && \
+	 cp -rv $WIDIRCFGDIR/mimi.conf ~/.config/mimi/ && \
+	 mkdir -p ~/.local/bin && \
+	 cp -rv $WIDIRCFGDIR/lfp ~/.local/bin/ && \ 
+	 cp -rv $WIDIR/xt/foxtag ~/.local/bin/ && \
+	 cp -rv $WIDIR/xt/wiconv ~/.local/bin/ && \
+         cp -rv $WIDIR/xt/slmenu ~/.local/bin/ && \
+	 cp -rv $WIDIRCFGDIR/.Xresources_nhk $HOME/ && \
+	 xrdb -merge ~/.Xresources_nhk && \
+	 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && \
+	 cp -rv $WIDIRCFGDIR/.nhktx.conf ~/ && \
+	 tmux source-file ~/.nhktx.conf && \
+	 cd $WIDIR/src && \
+         sudo make clean install && \
+	 sudo mkdir -p /usr/share/xsessions/ && \
+	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/ && \
+	 cd $WIDIR 
+	 echo 'complete. configurations moved into place.' 
          ;;
 
    -rb)
