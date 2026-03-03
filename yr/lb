@@ -17,50 +17,51 @@ ressx() {
     else
 	echo "applying keybinding strata."
     	sxhkd -c "$1" > /dev/null 2>&1 &
+	sleep 0.5 
+	kill -SIGUSR1 sxhkd &
     fi
 }
 
 case "$1" in
 
     -v)
-
+	notify-send "$VIM_MODE"
         ressx "$VIM_MODE" 
-	notify-send "NORMAL"
         ;;
 
     -i)
 
+	notify-send "$INSERT_MODE"
         ressx "$INSERT_MODE" 
-	notify-send "INS"
         ;;
 
     -V)
 
+        notify-send "$VIDEO_MODE"  
         ressx "$VIDEO_MODE"  
-	notify-send "VIDEO"
      	;;
 
     -a) 
 
+        notify-send "$VIDEO_MODE"  
         ressx "$AUDIO_MODE" 
-	notify-send "AUD"
      	;;
 
     -t)
 
+        notify-send "$TASK_MODE" 
         ressx "$TASK_MODE" 
-	notify-send "TSK"
      	;;
     
     -n) 
 
+        notify-send "$NETWORK_MODE" 
         ressx "$NETWORK_MODE" 
-	notify-send "NET"
 	;;
 
     -c) 
+        notify-send "$CONFIG_MODE" 
         ressx "$CONFIG_MODE" 
-	notify-send "CONF"
 	;;
 
     -e)
@@ -86,7 +87,6 @@ case "$1" in
 
     *)
         ressx "$VIM_MODE" 
-	notify-send "NORMAL"
         ;; 
 
 esac

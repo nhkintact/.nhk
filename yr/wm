@@ -1,17 +1,18 @@
 #!/bin/bash
 LABYRTERM="urxvt"
 LABYRMU="$LABYRTERM -e ncmpcpp"
-LABYREDIT="$LABYRTERM -e vim"
-LABYRWEB="mullvad-browser"
+LABYREDIT="$LABYRTERM -e nvim"
+LABYRWEB="qutebrowser"
 LABYREDIT="nvim"
+LABYRCHAT="equibop"
 WIDIR="$HOME/.nhk"
 WIDIRCFGDIR="$HOME/.nhk/xt/cfg"
 
 wideps() { # ignore this 
     case "$1" in
         "Gentoo")
-            emerge -av sys-devel/base sys-devel/gcc sys-devel/make sys-devel/autoconf sys-devel/automake x11-libs/libX11 x11-libs/libXft x11-libs/libXinerama x11-base/xorg-server x11-apps/xinit
-            ;;
+            sudo emerge --ask dev-vcs/git dev-lang/python dev-python/pipx x11-libs/cairo x11-libs/libx11 x11-libs/libxft x11-libs/libxinerama x11-libs/pango x11-libs/gtk+:4 dev-util/pkgconf gobject-introspection x11-misc/dunst app-arch/p7zip media-gfx/feh sys-apps/lf x11-misc/xsel media-video/mpv media-sound/mpd media-sound/ncmpcpp sys-apps/htop app-misc/redshift x11-terms/rxvt-unicode x11-misc/rofi x11-apps/dmenu x11-misc/slock dev-libs/yajl media-libs/freetype media-gfx/shotgun x11-misc/xclipboard media-fonts/terminus-font x11-misc/ueberzug app-multiplexers/tmux x11-libs/libwnck:3 net-news/newsboat app-editors/neovim x11-apps/xrandr x11-apps/xsetroot media-sound/pulsemixe media-sound/pasystray mail-client/aerc media-gfx/shotgun 
+	;;
         "Debian")
             sudo apt install build-essential libxi-dev libx11-dev libxft-dev libxfixes-dev libxtst-dev libxinerama-dev xorg-dev xinit git libgirepository1.0-dev libxkbcommon-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-4.0 pipx
 	    git clone https://github.com/rvaiya/warpd.git
@@ -73,7 +74,11 @@ wideps() { # ignore this
 case "$1" in
 
     -e)
-        exec $LABYREDIT $2 &
+        exec $LABYREDIT {0:$2 &
+        ;;
+
+    -c)
+        exec $LABYRCHAT {0:$2 &
         ;;
 
     -t)
@@ -291,9 +296,10 @@ case "$1" in
 	 cp -rv ~/.local/bin/foxtag $WIDIRCFGDIR/
 	 cp -rv ~/.config/dmenu-frecency/config.json $WIDIRCFGDIR/dmenu-frecency.config.json
 	 cp -rv ~/.config/polybar/config.ini $WIDIRCFGDIR/polybar.config.ini 
-	 cp -rv ~/.Xresources $WIDIRCFGDIR/
+	 cp -rv ~/.Xresources $WIDIRCFGDIR/.Xresources_nhk
 	 cp -rv ~/.config/lf/lfrc $WIDIRCFGDIR/
 	 cp -rv ~/.config/mimi/mimi.conf $WIDIRCFGDIR/
+	 cp -rv ~/.nhktx.conf $WIDIRCFGDIR/
 	 sudo cp -rv /usr/share/dwmbar/ $WIDIRCFGDIR/
 	 cp -rv ~/.local/bin/lfp $WIDIRCFGDIR/
 	 cp -rv ~/.local/bin/foxtag $WIDIR/xt/
@@ -324,7 +330,7 @@ case "$1" in
 	 mkdir -p ~/.config/hints/
 	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json
 	 mkdir -p ~/.config/warpd/
-	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/
+	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/config
 	 mkdir -p ~/.config/sxhkd/
 	 cp -rv $WIDIR/xk/* ~/.config/sxhkd/
 	 mkdir -p ~/.config/lf/
@@ -336,6 +342,11 @@ case "$1" in
 	 cp -rv $WIDIR/xt/foxtag ~/.local/bin/
 	 cp -rv $WIDIR/xt/wiconv ~/.local/bin/
          cp -rv $WIDIR/xt/slmenu ~/.local/bin/
+	 cp -rv $WIDIRCFGDIR/.Xresources_nhk $HOME/
+	 xrdb -merge ~/.Xresources_nhk
+	 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+	 cp -rv $WIDIRCFGDIR/.nhktx.conf ~/
+	 tmux source-file ~/.nhktx.conf 
 	 cd $WIDIR/src
          sudo make clean install
 	 sudo mkdir -p /usr/share/xsessions/
@@ -345,10 +356,9 @@ case "$1" in
 
    -rb)
 	 cd $WIDIR/src
-	 cp -rv $WIDIR/src/production.h config.h
          sudo make clean install
 	 sudo mkdir -p /usr/share/xsessions/
-	 sudo cp -rv $WIDIR/src/widow.desktop /usr/share/xsessions/
+	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/
 	 cd $WIDIR
          ;;
 
