@@ -1,0 +1,21 @@
+Alright... So... you figured out how to get this thing installed... uhhh... I'm unsure of where to start. Oh... right... The keybindings!
+
+the i key will enter the insert mode stratum, allowing you to input text into the application. you can press the windows key to go back into "vim" or "normal" mode. 
+
+t - opens the terminal. it is recommended that the first thing you do is run "wm -EE" to change default programs. 
+
+I - opens the text editor set within `wm`
+
+comma - opens the sxhkd keybinding configuration for the current mode you're in, within nvim. you can reload the current mode by running ctrl + space.
+
+o ; b - as in o, then b, opens up a metabrowser interface. you can just press enter if you don't have anything to type. 
+
+o ; c - will open the default chat client, which for me is Discord. you can make it whatever you want.  
+
+o ; a - opens pulsemixer, which allows you to configure audio devices. 
+
+n ; b - opens the bluetuith tui for btdev management.
+
+N - opens nmtui, which lets you manage your network connections.
+
+grave (`) - opens a window finder. you can reload the current mode by running ctrl + space. (ins: alt + o, ctrl + space)
