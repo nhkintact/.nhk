@@ -1,4 +1,4 @@
-ctrl + o ; w
+alt + o ; w
  dmenu-frecency 
 
 alt + w
@@ -7,12 +7,10 @@ alt + w
 alt + Escape
  lb -v
 
-# res.conf
-ctrl + o ; shift + space
+alt + o ; shift + space
  lb -i
 
 alt + Tab
-# normal
  lb -v
 
 Super_L
@@ -21,35 +19,35 @@ Super_L
 Awm_R
  lb -v
 
-ctrl + o ; backslash ; v
+alt + o ; backslash ; v
  lb -V
 
 # [nav]
 
-ctrl + o ; slash
+alt + o ; slash
  rofi -show window -kb-element-prev 'k' -kb-element-next 'j' -kb-accept-entry 'o'
 
-ctrl + o ; e 
+alt + o ; e 
  emojimenu
 
-ctrl + o ; shift + 1
+alt + o ; shift + 1
  pulsar-termrun
 
 # [wm]
 
-ctrl + o ; L
+alt + o ; L
  slock 
 
-ctrl + o ; ctrl + l
+alt + o ; ctrl + l
  slock 
 
 alt + {j,k}
  dwmc focusstack {+,-}1
  
-ctrl + o ; {j,k}
+alt + o ; {j,k}
  dwmc focusstack {+,-}1
  
-# ctrl + o ; {h,l}
+# alt + o ; {h,l}
 #  dwmc setmfact {-,+}1.1
  
 # shift + space ; {u,i}
@@ -58,70 +56,70 @@ ctrl + o ; {j,k}
 # shift + space ; o 
 #  dwmc setcfact
 
-ctrl + o ; {ctrl + grave}
+alt + o ; {ctrl + grave}
  dwmc setlayoutex {8,0}
  
-ctrl + o ; F11 
+alt + o ; F11 
  dwmc togglebar
  
-ctrl + o ; {1-9} 
+alt + o ; {1-9} 
  dwmc viewex {0-8}
 
-ctrl + o ; {g ; g,G}
+alt + o ; {g ; g,G}
  dwmc viewex {0,8}
 
-ctrl + o ; space ; {1-9}
+alt + o ; space ; {1-9}
  dwmc tagex {0-8}
 
-ctrl + o ; space ; {g ; g,G}
+alt + o ; space ; {g ; g,G}
  dwmc tagex {0,8}
 
-ctrl + o ; shift + grave
+alt + o ; shift + grave
  dwmc togglemax
 
-ctrl + o ; c ; w
+alt + o ; c ; w
  dwmc killclient; rofi -show drun
 
-ctrl + o ; ctrl + n 
+alt + o ; ctrl + n 
  dwmc nametag
 
-ctrl + o ; space ; {j,k}
+alt + o ; space ; {j,k}
  dwmc rotatestack {+,-}1
 
-ctrl + o ; ctrl + {j,k}
+alt + o ; ctrl + {j,k}
  dwmc setcfact {+,-}0.95
 
-ctrl + o ; {J,K}
+alt + o ; {J,K}
  dwmc {pushdown,pushup}
 
-ctrl + o ; equal
+alt + o ; equal
  dwmc setcfact 
 
-ctrl + o ; {l,h}
+alt + o ; {l,h}
  dwmc setmfact {+,-}0.18
 
 alt + f
  hints
 
-ctrl + o ; f
+alt + o ; f
  hints
 
-ctrl + o ; r 
+alt + o ; r 
  hints -m scroll
 
-ctrl + o ; V 
+alt + o ; V 
  warpd --hint
 
-ctrl + o ; v 
+alt + o ; v 
  warpd --normal
 
-ctrl + o ; z 
+alt + o ; z 
  dwmc zoom
  
-ctrl + o ; q 
+alt + o ; q 
  dwmc killclient
 
-ctrl + o ; {n,N}  
+alt + o ; {n,N}  
  dunstctl {close-all,history-pop}
 
 # [tools]
@@ -149,47 +147,33 @@ Print ; c
  wiconv
 
 Print ; p
- wm -E clipse
+ wm -t clipse
 
-ctrl + o ; t
- xterm -s
+alt + o ; t
+ wm -t
 
 alt + r
  wm -e "note.txt"
 
-ctrl + o ; {b,B}
- {mullvad-browser,torbrowser-launcher} 
+alt + o ; {b,B}
+ wm -b
 
-ctrl + o ; {semicolon, colon}
- {mullvad-browser,torbrowser-launcher} $(xsel -b)
+alt + o ; {semicolon, colon}
+ mullvad-browser $(xsel -b)
 
-ctrl + o ; p
+alt + o ; p
  qutebrowser "$(xsel -b)"
 
 alt + q ; d
  gnome-dictionary
 
 alt + q ; f
- wm -E ranger
-
-alt + q ; y
- flatpak run io.freetubeapp.FreeTube
-
-ctrl + o ; c
- equibop
-
-alt + q ; r
- goodvibes
-
-alt + q ; b
-# book 
- manuskript 
+ wm -t ranger
 
 alt + q ; n
- wm -E newsboat
+ wm -t newsboat
 
 alt + q ; m 
-# mail
  wm -E aerc
 
 alt + q ; c 
@@ -201,7 +185,7 @@ alt + q ; C
 alt + q ; k
  kpmenu
 
-ctrl + o ; backslash ; colon
+alt + o ; backslash ; colon
  rofi -show drun
 
 # [productivity]  
@@ -209,14 +193,14 @@ ctrl + o ; backslash ; colon
 alt + q ; d 
  python ~/cmdlaunch.py "python ~/t/t.py --task-dir ~/tasks --list tasks -d" 
 
-ctrl + o ; t 
+alt + o ; t 
  spmenu -m
 
-ctrl + o ; F
+alt + o ; F
  wm -se
 
-ctrl + o ; shift + 3
- netmenu
+alt + o ; shift + 3
+ wm -t nmtui
 
 # [system]
 
@@ -226,16 +210,16 @@ ctrl + o ; shift + 3
 shift + F8
  redshift {-O 2300,-x}
 
-ctrl + o ; exclam 
+alt + o ; exclam 
  python ~/cmdlaunch.py -n "" 
 
-ctrl + o ; x 
+alt + o ; x 
  lb -v && xkill && lb -i
 
-ctrl + o ; P 
+alt + o ; P 
  python ~/cmdlaunch.py "pkill -f" 
 
 # [config]
 
-ctrl + o ; comma
+alt + o ; comma
  lb -e
