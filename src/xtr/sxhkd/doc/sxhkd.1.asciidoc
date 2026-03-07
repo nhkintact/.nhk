@@ -1,0 +1,132 @@
+:man source:   Sxhkd
+:man version:  {revnumber}
+:man manual:   Sxhkd Manual
+
+sxhkd(1)
+========
+
+Name
+----
+
+sxhkd - Simple X hotkey daemon
+
+Synopsis
+--------
+
+*sxhkd* [_OPTIONS_] [_EXTRA_CONFIG_ …]
+
+Description
+-----------
+
+sxhkd is a simple X hotkey daemon with a powerful and compact configuration syntax.
+
+Options
+-------
+
+
+*-h*::
+    Print the synopsis to standard output and exit.
+
+*-v*::
+    Print the version information to standard output and exit.
+
+*-m* _COUNT_::
+    Handle the first _COUNT_ mapping notify events.
+
+*-t* _TIMEOUT_::
+    Timeout in seconds for the recording of chord chains.
+
+*-c* _CONFIG_FILE_::
+    Read the main configuration from the given file.
+
+*-r* _REDIR_FILE_::
+    Redirect the commands output to the given file.
+
+*-s* _STATUS_FIFO_::
+    Output status information to the given FIFO.
+
+*-a* _ABORT_KEYSYM_::
+    Name of the keysym used for aborting chord chains.
+
+
+Behavior
+--------
+
+*sxhkd* is a daemon that listens to keyboard events and execute commands.
+
+It reads its configuration file from *$XDG_CONFIG_HOME/sxhkd/sxhkdrc* by default, or from the given file if the *-c* option is used.
+
+Additional configuration files can be passed as arguments.
+
+If *sxhkd* receives a _SIGUSR1_ (resp. _SIGUSR2_) signal, it will reload its configuration file (resp. toggle the grabbing state of all its bindings).
+
+If *sxhkd* recieves a _SIGALRM_ signal, it will break the current chain if there is one in progress.
+
+The commands are executed via *SHELL* _-c_ *COMMAND* (hence you can use environment variables).
+
+*SHELL* will be the content of the first defined environment variable in the following list: *SXHKD_SHELL*, *SHELL*.
+
+*SXHKD_PID* will be automatically set to the pid of *sxhkd* in processes spawned by *sxhkd*, which may be used by the child process to send easily signals such as _SIGALRM_ to the correct instance of *sxhkd*.
+
+If you have a non-QWERTY keyboard or a non-standard layout configuration, you should provide a _COUNT_ of _1_ to the *-m* option or _-1_ (interpreted as infinity) if you constantly switch from one layout to the other (*sxhkd* ignores all mapping notify events by default because the majority of those events are pointless).
+
+
+Configuration
+-------------
+
+Each line of the configuration file is interpreted as so:
+
+* If it is empty or starts with `#`, it is ignored.
+* If it starts with a space, it is read as a command.
+* Otherwise, it is read as a hotkey.
+
+General syntax:
+
+----
+HOTKEY
+    [;]COMMAND
+
+HOTKEY      := CHORD_1 ; CHORD_2 ; … ; CHORD_n
+CHORD_i     := [MODIFIERS_i +] [~][@]KEYSYM_i
+MODIFIERS_i := MODIFIER_i1 + MODIFIER_i2 + … + MODIFIER_ik
+----
+
+The valid modifier names are: _super_, _hyper_, _meta_, _alt_, _control_, _ctrl_, _shift_, _mode_switch_, _lock_, _mod1_, _mod2_, _mod3_, _mod4_, _mod5_ and _any_.
+
+The keysym names are given by the output of *xev -event keyboard*.
+
+Hotkeys and commands can be spread across multiple lines by ending each partial line with a backslash character.
+
+When multiple chords are separated by semicolons, the hotkey is a chord chain: the command will only be executed after receiving each chord of the chain in consecutive order.
+
+The colon character can be used instead of the semicolon to indicate that the chord chain shall not be aborted when the chain tail is reached.
+
+If a command starts with a semicolon, it will be executed synchronously, otherwise asynchronously.
+
+The _Escape_ key can be used to abort a chord chain.
+
+If *@* is added at the beginning of the keysym, the command will be run on key release events, otherwise on key press events.
+
+If *~* is added at the beginning of the keysym, the captured event will be replayed for the other clients.
+
+Pointer hotkeys can be defined by using one of the following special keysym names: _button1_, _button2_, _button3_, …, _button24_.
+
+The hotkey and the command may contain sequences of the form '{STRING_1,…,STRING_N}'. Braces can be escaped with *\*.
+
+In addition, the sequences can contain ranges of the form _A_-_Z_ where _A_ and _Z_ are alphanumeric characters.
+
+The underscore character represents an empty sequence element.
+
+Author
+------
+
+Bastien Dejean <nihilhill at gmail.com>
+
+Mailing List
+------------
+
+sxhkd at librelist.com
+
+////
+vim: set ft=asciidoc:
+////
