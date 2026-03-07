@@ -1,0 +1,8 @@
+#include "highlight.c"
+#include "fuzzymatch.c"
+#include "fzfexpect.c"
+#include "inputmethod.c"
+#include "multiselect.c"
+#include "mousesupport.c"
+#include "navhistory.c"
+#include "vi_mode.c"

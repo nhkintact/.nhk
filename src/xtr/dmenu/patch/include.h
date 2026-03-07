@@ -1,0 +1,6 @@
+#include "fzfexpect.h"
+#include "inputmethod.h"
+#include "mousesupport.h"
+#include "multiselect.h"
+#include "navhistory.h"
+#include "vi_mode.h"
