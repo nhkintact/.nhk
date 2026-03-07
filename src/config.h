@@ -98,9 +98,10 @@ static const char *const autostart[] = {
 	"wm", "-w", NULL,
 	"wm", "-t", NULL,
 	"dunst", NULL,
-	"dwmbar", NULL,
+	"slstatus", NULL,
 	"pasystray", NULL,
 	"hintsd", NULL,
+	"wm", "-t", "~/.nhk/tutorial.txt", NULL,
 	NULL /* terminate */
 };
 
@@ -306,6 +307,8 @@ ResourcePref resources[] = {
 	{ "urgfloatcolor",          STRING,    &urgfloatcolor },
 };
 
+static const char *lbres[] = { "lb", "-v", NULL };
+
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
 	
@@ -313,9 +316,8 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioRaiseVolume, spawn,        {.v = volup } },
         { 0,                            XF86XK_AudioLowerVolume, spawn,        {.v = voldown }},
         { 0,                            XF86XK_AudioMicMute,     spawn,        {.v = micmute }},
-	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
+	{ MODKEY,                       XK_p,          spawn,                  {.v = lbres } },
 	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
-	{ MODKEY|ControlMask,           XK_p,          riospawnsync,           {.v = dmenucmd } },
 	{ MODKEY,                       XK_s,          rioresize,              {0} },
 	{ MODKEY,                       XK_b,          togglebar,              {0} },
 	{ MODKEY|ControlMask,           XK_space,      focusmaster,            {0} },
