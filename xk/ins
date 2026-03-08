@@ -7,7 +7,7 @@ alt + w
 alt + Escape
  lb -v
 
-alt + o ; shift + space
+alt + o ; ctrl + space
  lb -i
 
 alt + Tab
@@ -116,7 +116,7 @@ alt + o ; v
 alt + o ; z 
  dwmc zoom
  
-alt + o ; q 
+alt + o ; d 
  dwmc killclient
 
 alt + o ; {n,N}  

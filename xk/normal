@@ -36,6 +36,9 @@ w
 W
  notify-send $(dmenu-frecency --read-apps)
 
+ctrl + w 
+ nitrogen
+
 backslash ; c
  lb -c 
 
@@ -219,13 +222,13 @@ o ; w
  nitrogen
 
 o ; f
- wm -t ranger 
+ dmenufm -t
 
 o ; semicolon
  mullvad-browser "$(xsel -b)"
 
 o ; comma
- wm -t ~/.nhk/src/config.h
+ wm -t wm -EE  ~/.nhk/src/config.h
 
 Z ; Z
  lb -i && wm -t wm -rb
