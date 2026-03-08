@@ -5,5 +5,5 @@ March 07/2026: Currently downsizing the amount of configurations or other softwa
 
 ```
 git clone https://github.com/nhkintact/.nhk ~/.nhk
-cd ~/.nhk/yr/ && chmod +x wm && ./wm -upk [Distro]
+cd ~/.nhk/yr/ && chmod +x wm && ./wm -upk Arch
 ```
