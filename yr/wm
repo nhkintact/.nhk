@@ -8,7 +8,6 @@ LABYRCHAT="equibop"
 LABYRMAIL="claws-mail"
 WIDIR="$HOME/.nhk"
 WIDIRCFGDIR="$HOME/.nhk/xt/cfg"
-PKGMAN="sudo pacman -S --noconfirm"
 
 wideps() { # ignore this 
     case "$1" in
@@ -130,8 +129,11 @@ wideps() { # ignore this
 #            sudo zypper install -t pattern devel_basis && sudo zypper install libX11-devel libXft-devel libXinerama-devel xorg-x11-server xorg-x11-xinit
 #            ;;
 	"Arch") 
-            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pango pkgconf gobject-introspection dunst lf xsel mpv mpd ncmpcpp htop brightnessctl redshift rxvt-unicode rofi paru newsboat nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux aerc webkit2gtk-4.1 gcr --noconfirm && \
-	    paru -S warpd-git gtkmm dmenufm-git bluetuith-git dmenu-frecency pulsemixer pasystray-git hacksaw-git shotgun --noconfirm 
+            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pango pkgconf gobject-introspection lf xsel htop brightnessctl redshift rxvt-unicode rofi nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux webkit2gtk-4.1 gcr tmux nitrogen --noconfirm
+	    git clone https://aur.archlinux.org/yay.git
+	    cd yay/ 
+	    makepkg -si 
+	    yay -S warpd-git dmenufm-git bluetuith-git dmenu-frecency pulsemixer pasystray-git hacksaw-git shotgun --noconfirm 
             ;;
 #
 #	"DSKIP")
@@ -400,57 +402,56 @@ case "$1" in
 
   -upk)  
 	 wideps $2
-   	 cd $WIDIR/src/xtr && \
-	 cd dmenu/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd slock/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd nsxiv/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd dunst/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd sxhkd/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd slstatus/ && make -j4 && sudo make install && \
-	 cd .. && \
-	 cd surf/ && make -j4 && sudo make install && \
-	 cd wyebadblock && make -j4 && sudo make install && \
-	 sudo mkdir /usr/local/lib/surf && sudo ln -s /usr/lib/wyebrowser/adblock.so /usr/local/lib/surf && \
-	 cd $WIDIR && \
-	 mkdir -p $HOME/.config/nhk && \ 
-	 sudo cp -rv $WIDIR/yr/lb /usr/bin && \
-	 sudo cp -rv $WIDIR/yr/wm /usr/bin && \
-	 sudo chmod +x /usr/bin/wm && \
-	 sudo chmod +x /usr/bin/lb && \
-	 mkdir -p ~/.config/polybar/ && \
-	 cp -rv $WIDIRCFGDIR/polybar.config.ini ~/.config/polybar/config.ini && \
-	 mkdir -p ~/.config/dmenu-frecency/ && \
-	 cp -rv $WIDIRCFGDIR/dmenu-frecency.config.json ~/.config/dmenu-frecency/config.json && \
-	 mkdir -p ~/.config/dunst/ && \
-	 cp -rv $WIDIRCFGDIR/dunstrc ~/.config/dunst/ && \
-	 mkdir -p ~/.config/hints/ && \
-	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json && \
-	 mkdir -p ~/.config/warpd/ && \
+   	 cd $WIDIR/src/xtr
+	 cd dmenu/ && make -j4 && sudo make install
+	 cd ..
+	 cd slock/ && make -j4 && sudo make install
+	 cd ..
+	 cd nsxiv/ && make -j4 && sudo make install
+	 cd ..
+	 cd dunst/ && make -j4 && sudo make install
+	 cd ..
+	 cd sxhkd/ && make -j4 && sudo make install
+	 cd ..
+	 cd slstatus/ && make -j4 && sudo make install
+	 cd ..
+	 cd surf/ && make -j4 && sudo make install
+	 cd wyebadblock/ && make -j4 && sudo make install
+	 sudo mkdir /usr/local/lib/surf && sudo ln -s /usr/lib/wyebrowser/adblock.so /usr/local/lib/surf
+	 cd $WIDIR
+	 mkdir -p $HOME/.config/nhk
+	 sudo cp -rv $WIDIR/yr/lb /usr/bin 
+	 sudo cp -rv $WIDIR/yr/wm /usr/bin 
+	 sudo chmod +x /usr/bin/wm 
+	 sudo chmod +x /usr/bin/lb 
+	 mkdir -p ~/.config/polybar/
+	 mkdir -p ~/.config/dmenu-frecency/ 
+	 cp -rv $WIDIRCFGDIR/dmenu-frecency.config.json ~/.config/dmenu-frecency/config.json
+	 mkdir -p ~/.config/dunst/
+	 cp -rv $WIDIRCFGDIR/dunstrc ~/.config/dunst/
+	 mkdir -p ~/.config/hints/
+	 cp -rv $WIDIRCFGDIR/config.hints.json ~/.config/hints/config.json
+	 mkdir -p ~/.config/warpd/
 	 cp -rv $WIDIRCFGDIR/warpd.config ~/.config/warpd/config 
 	 mkdir -p ~/.config/sxhkd && cp -rv $WIDIR/xk/* ~/.config/sxhkd/
 	 cd $WIDIR
-	 mkdir -p ~/.config/lf/ && \
-	 cp -rv $WIDIRCFGDIR/lfrc ~/.config/lf/ && \
-	 mkdir -p ~/.config/mimi && \
-	 cp -rv $WIDIRCFGDIR/mimi.conf ~/.config/mimi/mime.conf && \
-	 mkdir -p ~/.local/bin && \
-	 cp -rv xt/foxtag ~/.local/bin/ && \
-	 cp -rv xt/wiconv ~/.local/bin/ && \
-         cp -rv xt/slmenu ~/.local/bin/ && \
-	 cp -rv $WIDIRCFGDIR/.Xresources_nhk $HOME/ && \
-	 xrdb -merge ~/.Xresources_nhk && \
-	 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && \
-	 cp -rv $WIDIRCFGDIR/.nhktx.conf ~/ && \
-	 tmux source-file ~/.nhktx.conf && \
-	 cd $WIDIR/src && \
-         sudo make clean install && \
-	 sudo mkdir -p /usr/share/xsessions/ && \
-	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/ && \
+	 mkdir -p ~/.config/mimi 
+	 cp -rv $WIDIRCFGDIR/mimi.conf ~/.config/mimi/mime.conf
+	 mkdir -p ~/.local/bin 
+	 cp -rv xt/foxtag ~/.local/bin/
+	 cp -rv xt/wiconv ~/.local/bin/
+         cp -rv xt/slmenu ~/.local/bin/
+	 cp -rv $WIDIRCFGDIR/.Xresources_nhk $HOME/
+	 xrdb -merge ~/.Xresources_nhk
+	 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+	 cp -rv $WIDIRCFGDIR/.nhktx.conf ~/
+	 tmux source-file ~/.nhktx.conf
+	 cd $WIDIR/src
+         sudo make clean install
+	 sudo mkdir -p /usr/share/xsessions/ 
+	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/
+	 sudo chmod +x patch/dwmc
+	 sudo cp -rv patch/dwmc /usr/bin/dwmc
 	 cd $WIDIR 
          ;;
 
