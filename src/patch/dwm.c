@@ -44,6 +44,8 @@
 #include "drw.h"
 #include "util.h"
 
+#include <poll.h>
+
 #include <X11/XKBlib.h>
 
 #include <assert.h>
@@ -75,6 +77,7 @@
 
 /* enums */
 enum {
+	CurIronCross,
 	CurNormal,
 	CurResize,
 	CurMove,
@@ -283,6 +286,9 @@ struct Monitor {
 	TagState tagstate;
 	Client *lastsel;
 	const Layout *lastlt;
+	Window tagwin;
+	int previewshow;
+	Pixmap tagmap[NUMTAGS];
 };
 
 typedef struct {
@@ -297,6 +303,7 @@ typedef struct {
 	int isterminal;
 	int noswallow;
 	int monitor;
+	int unmanaged;
 	int xkb_layout;
 	int isgame;
 } Rule;
@@ -416,6 +423,7 @@ static int xkbEventType = 0;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh;               /* bar geometry */
+static int unmanaged = 0;    /* whether the window manager should manage the new window or not */
 static int lrpad;            /* sum of left and right padding for text */
 /* Some clients (e.g. alacritty) helpfully send configure requests with a new size or position
  * when they detect that they have been moved to another monitor. This can cause visual glitches
@@ -437,7 +445,6 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[DestroyNotify] = destroynotify,
 	[EnterNotify] = enternotify,
 	[Expose] = expose,
-	[GenericEvent] = genericevent,
 	[FocusIn] = focusin,
 	[KeyPress] = keypress,
 	[KeyRelease] = keyrelease,
@@ -451,7 +458,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 static Atom wmatom[WMLast], netatom[NetLast];
 static Atom xatom[XLast];
 static Atom clientatom[ClientLast];
-static int running = 1;
+static volatile sig_atomic_t running = 1;
 static Cur *cursor[CurLast];
 static Clr **scheme;
 static Display *dpy;
@@ -504,6 +511,7 @@ applyrules(Client *c)
 			c->noswallow = r->noswallow;
 			c->isfloating = r->isfloating;
 			c->tags |= r->tags;
+			unmanaged = r->unmanaged;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
@@ -644,20 +652,6 @@ buttonpress(XEvent *e)
 		focus(NULL);
 	}
 
-	c = wintoclient(ev->window);
-
-	if (!c && cursor_hidden) {
-		c = recttoclient(mouse_x, mouse_y, 1, 1, 1);
-		showcursor(NULL);
-	}
-
-	if (c) {
-		focus(c);
-		restack(selmon);
-		XAllowEvents(dpy, ReplayPointer, CurrentTime);
-		click = ClkClientWin;
-	}
-
 	for (bar = selmon->bar; bar; bar = bar->next) {
 		if (ev->window == bar->win) {
 			for (r = 0; r < LENGTH(barrules); r++) {
@@ -681,6 +675,13 @@ buttonpress(XEvent *e)
 		}
 	}
 
+	if (click == ClkRootWin && (c = wintoclient(ev->window))) {
+		focus(c);
+		restack(selmon);
+		XAllowEvents(dpy, ReplayPointer, CurrentTime);
+		click = ClkClientWin;
+	}
+
 	for (i = 0; i < LENGTH(buttons); i++) {
 		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
 				&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state)) {
@@ -693,7 +694,6 @@ buttonpress(XEvent *e)
 		}
 	}
 
-	last_button_press = now();
 }
 
 void
@@ -781,6 +781,11 @@ cleanupmon(Monitor *mon)
 		free(bar);
 	}
 	free(mon->pertag);
+	for (size_t i = 0; i < NUMTAGS; i++)
+		if (mon->tagmap[i])
+			XFreePixmap(dpy, mon->tagmap[i]);
+	XUnmapWindow(dpy, mon->tagwin);
+	XDestroyWindow(dpy, mon->tagwin);
 	free(mon);
 }
 
@@ -791,6 +796,7 @@ clientmessage(XEvent *e)
 	XSetWindowAttributes swa;
 	XClientMessageEvent *cme = &e->xclient;
 	Client *c = wintoclient(cme->window);
+	unsigned int i;
 
 	if (showsystray && systray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
 		/* add systray icons */
@@ -841,8 +847,20 @@ clientmessage(XEvent *e)
 			)));
 		}
 	} else if (cme->message_type == netatom[NetActiveWindow]) {
-		if (c != selmon->sel && !c->isurgent)
-			seturgent(c, 1);
+		if (c->tags & c->mon->tagset[c->mon->seltags])
+			focus(c);
+		else {
+			for (i = 0; i < NUMTAGS && !((1 << i) & c->tags); i++);
+			if (i < NUMTAGS) {
+				if (c != selmon->sel)
+					unfocus(selmon->sel, 0, NULL);
+				selmon = c->mon;
+				if (((1 << i) & TAGMASK) != selmon->tagset[selmon->seltags])
+					view(&((Arg) { .ui = 1 << i }));
+				focus(c);
+				restack(selmon);
+			}
+		}
 	}
 }
 
@@ -884,6 +902,7 @@ configurenotify(XEvent *e)
 			for (m = mons; m; m = m->next) {
 				for (bar = m->bar; bar; bar = bar->next)
 					XMoveResizeWindow(dpy, bar->win, bar->bx, bar->by, bar->bw, bar->bh);
+				createpreview(m);
 			}
 			arrange(NULL);
 			focus(NULL);
@@ -1233,9 +1252,6 @@ enternotify(XEvent *e)
 	Monitor *m;
 	XCrossingEvent *ev = &e->xcrossing;
 
-	if (cursor_hidden)
-		return;
-
 	if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
 		return;
 	c = wintoclient(ev->window);
@@ -1374,12 +1390,6 @@ getrootptr(int *x, int *y)
 	int di;
 	unsigned int dui;
 	Window dummy;
-
-	if (cursor_hidden) {
-		*x = mouse_x;
-		*y = mouse_y;
-		return 1;
-	}
 
 	return XQueryPointer(dpy, root, &dummy, &dummy, x, y, &di, &di, &dui);
 }
@@ -1577,6 +1587,23 @@ manage(Window w, XWindowAttributes *wa)
 			c->mon = term->mon;
 	}
 
+	if (unmanaged) {
+		XMapWindow(dpy, c->win);
+		if (unmanaged == 1)
+			XRaiseWindow(dpy, c->win);
+		else if (unmanaged == 2)
+			XLowerWindow(dpy, c->win);
+
+		updatewmhints(c);
+		if (!c->neverfocus)
+			XSetInputFocus(dpy, c->win, RevertToPointerRoot, CurrentTime);
+		sendevent(c->win, wmatom[WMTakeFocus], NoEventMask, wmatom[WMTakeFocus], CurrentTime, 0, 0, 0);
+
+		free(c);
+		unmanaged = 0;
+		return;
+	}
+
 	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)
 		c->x = c->mon->wx + c->mon->ww - WIDTH(c);
 	if (c->y + HEIGHT(c) > c->mon->wy + c->mon->wh)
@@ -1685,6 +1712,9 @@ motionnotify(XEvent *e)
 		barhover(e, bar);
 		return;
 	}
+
+	if (selmon->previewshow != 0)
+		hidetagpreview(selmon);
 
 	if (ev->window != root)
 		return;
@@ -1817,6 +1847,7 @@ propertynotify(XEvent *e)
 void
 quit(const Arg *arg)
 {
+	restart = arg->i;
 	running = 0;
 }
 
@@ -2160,6 +2191,9 @@ setup(void)
 	/* clean up any zombies immediately */
 	sigchld(0);
 
+	signal(SIGHUP, sighup);
+	signal(SIGTERM, sigterm);
+
 	/* the one line of bloat that would have saved a lot of time for a lot of people */
 	putenv("_JAVA_AWT_WM_NONREPARENTING=1");
 
@@ -2207,6 +2241,7 @@ setup(void)
 	/* init cursors */
 	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
 	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
+	cursor[CurIronCross] = drw_cur_create(drw, XC_iron_cross);
 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
 	/* init appearance */
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
@@ -2248,24 +2283,6 @@ setup(void)
 	                      XkbAllStateComponentsMask, XkbGroupStateMask);
 	XkbGetState(dpy, XkbUseCoreKbd, &xkbstate);
 	xkbGlobal.group = xkbstate.locked_group;
-
-	if (!XQueryExtension(dpy, "XInputExtension", &xi_opcode, &i, &i)) {
-		fprintf(stderr, "Warning: XInput is not available.");
-	}
-	/* Tell XInput to send us all RawMotion events. */
-	unsigned char mask_bytes[XIMaskLen(XI_LASTEVENT)];
-	memset(mask_bytes, 0, sizeof(mask_bytes));
-	XISetMask(mask_bytes, XI_RawMotion);
-	XISetMask(mask_bytes, XI_RawKeyRelease);
-	XISetMask(mask_bytes, XI_RawTouchBegin);
-	XISetMask(mask_bytes, XI_RawTouchEnd);
-	XISetMask(mask_bytes, XI_RawTouchUpdate);
-
-	XIEventMask mask;
-	mask.deviceid = XIAllMasterDevices;
-	mask.mask_len = sizeof(mask_bytes);
-	mask.mask = mask_bytes;
-	XISelectEvents(dpy, root, &mask, 1);
 
 	grabkeys();
 	focus(NULL);
@@ -2475,6 +2492,7 @@ toggleview(const Arg *arg)
 	int i;
 
 	if (newtagset) {
+		tagpreviewswitchtag();
 		selmon->tagset[selmon->seltags] = newtagset;
 
 		if (newtagset == ~0)
@@ -2619,7 +2637,7 @@ updatebars(void)
 	XSetWindowAttributes wa = {
 		.override_redirect = True,
 		.background_pixmap = ParentRelative,
-		.event_mask = ButtonPressMask|ExposureMask
+		.event_mask = ButtonPressMask|ExposureMask|PointerMotionMask
 	};
 	XClassHint ch = {"dwm", "dwm"};
 	for (m = mons; m; m = m->next) {
@@ -2888,6 +2906,7 @@ view(const Arg *arg)
 	{
 		return;
 	}
+	tagpreviewswitchtag();
 	if (!arg->ui) {
 		selmon->seltags += 1;
 		if (selmon->seltags == LENGTH(selmon->tagset))
@@ -3024,10 +3043,32 @@ zoom(const Arg *arg)
 int
 main(int argc, char *argv[])
 {
-	if (argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION);
-	else if (argc != 1)
-		die("usage: dwm [-v]");
+	for (int i=1;i<argc;i+=1)
+		if (!strcmp("-v", argv[i]))
+			die("dwm-"VERSION);
+		else if (!strcmp("-h", argv[i]) || !strcmp("--help", argv[i]))
+			die(help());
+		else if (!strcmp("-fn", argv[i])) /* font set */
+			fonts[0] = argv[++i];
+		else if (!strcmp("-nb", argv[i])) /* normal background color */
+			colors[SchemeNorm][1] = argv[++i];
+		else if (!strcmp("-nf", argv[i])) /* normal foreground color */
+			colors[SchemeNorm][0] = argv[++i];
+		else if (!strcmp("-sb", argv[i])) /* selected background color */
+			colors[SchemeSel][1] = argv[++i];
+		else if (!strcmp("-sf", argv[i])) /* selected foreground color */
+			colors[SchemeSel][0] = argv[++i];
+		else if (!strcmp("-df", argv[i])) /* dmenu font */
+			dmenucmd[2] = argv[++i];
+		else if (!strcmp("-dnb", argv[i])) /* dmenu normal background color */
+			dmenucmd[4] = argv[++i];
+		else if (!strcmp("-dnf", argv[i])) /* dmenu normal foreground color */
+			dmenucmd[6] = argv[++i];
+		else if (!strcmp("-dsb", argv[i])) /* dmenu selected background color */
+			dmenucmd[8] = argv[++i];
+		else if (!strcmp("-dsf", argv[i])) /* dmenu selected foreground color */
+			dmenucmd[10] = argv[++i];
+		else die(help());
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
@@ -3047,6 +3088,8 @@ main(int argc, char *argv[])
 	run();
 	cleanup();
 	XCloseDisplay(dpy);
+	if (restart)
+		execvp(argv[0], argv);
 	return EXIT_SUCCESS;
 }
 
