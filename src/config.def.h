@@ -3,11 +3,12 @@
 /* Helper macros for spawning commands */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 #define CMD(...)   { .v = (const char*[]){ __VA_ARGS__, NULL } }
-
+#include <X11/XF86keysym.h>
 /* appearance */
 static const unsigned int borderpx       = 1;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
 static const int swallowfloating         = 0;   /* 1 means swallow floating windows by default */
+static const int scalepreview            = 4;        /* Tag preview scaling */
 static const unsigned int gappih         = 20;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
 static const unsigned int gappoh         = 10;  /* horiz outer gap between windows and screen edge */
@@ -30,30 +31,30 @@ static const int showsystray             = 1;   /* 0 means no systray */
 static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "monospace:size=10" };
-static const char dmenufont[]            = "monospace:size=10";
+static const char *fonts[]               = { "terminus:size=9" };
+static const char dmenufont[]            = "terminus:size=9";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
-static char normfgcolor[]                = "#bbbbbb";
-static char normbgcolor[]                = "#222222";
-static char normbordercolor[]            = "#444444";
-static char normfloatcolor[]             = "#db8fd9";
+static char normfgcolor[]                = "#ffffff";
+static char normbgcolor[]                = "#000000";
+static char normbordercolor[]            = "#000000";
+static char normfloatcolor[]             = "#ffffff";
 
-static char selfgcolor[]                 = "#eeeeee";
-static char selbgcolor[]                 = "#005577";
-static char selbordercolor[]             = "#005577";
+static char selfgcolor[]                 = "#930000";
+static char selbgcolor[]                 = "#000000";
+static char selbordercolor[]             = "#ffffff";
 static char selfloatcolor[]              = "#005577";
 
-static char titlenormfgcolor[]           = "#bbbbbb";
-static char titlenormbgcolor[]           = "#222222";
-static char titlenormbordercolor[]       = "#444444";
-static char titlenormfloatcolor[]        = "#db8fd9";
+static char titlenormfgcolor[]           = "#ffffff";
+static char titlenormbgcolor[]           = "#000000";
+static char titlenormbordercolor[]       = "#ffffff";
+static char titlenormfloatcolor[]        = "#ffffff";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
-static char titleselbordercolor[]        = "#005577";
-static char titleselfloatcolor[]         = "#005577";
+static char titleselfgcolor[]            = "#000000";
+static char titleselbgcolor[]            = "#ffffff";
+static char titleselbordercolor[]        = "#ffffff";
+static char titleselfloatcolor[]         = "#ffffff";
 
 static char tagsnormfgcolor[]            = "#ffffff";
 static char tagsnormbgcolor[]            = "#000000";
@@ -65,15 +66,15 @@ static char tagsselbgcolor[]             = "#ffffff";
 static char tagsselbordercolor[]         = "#ffffff";
 static char tagsselfloatcolor[]          = "#ffffff";
 
-static char hidnormfgcolor[]             = "#005577";
-static char hidselfgcolor[]              = "#227799";
-static char hidnormbgcolor[]             = "#222222";
-static char hidselbgcolor[]              = "#222222";
+static char hidnormfgcolor[]             = "#000000";
+static char hidselfgcolor[]              = "#ffffff";
+static char hidnormbgcolor[]             = "#ffffff";
+static char hidselbgcolor[]              = "#ffffff";
 
-static char urgfgcolor[]                 = "#bbbbbb";
-static char urgbgcolor[]                 = "#222222";
-static char urgbordercolor[]             = "#ff0000";
-static char urgfloatcolor[]              = "#db8fd9";
+static char urgfgcolor[]                 = "#000000";
+static char urgbgcolor[]                 = "#ffffff";
+static char urgbordercolor[]             = "#ffffff";
+static char urgfloatcolor[]              = "#ffffff";
 
 static char *colors[][ColCount] = {
 	/*                       fg                bg                border                float */
@@ -90,16 +91,17 @@ static char *colors[][ColCount] = {
 
 static const Launcher launchers[] = {
 	/* icon to display      command        */
-	{ "surf",               CMD("surf", "duckduckgo.com") },
+	{ "*",               CMD("lb", "-v") },
 };
 
 static const char *const autostart[] = {
 	"lb", "-v", NULL,
 	"wm", "-w", NULL,
 	"wm", "-t", NULL,
+	"xban", NULL, 
 	"dunst", NULL,
+	"slstatus", NULL,
 	"pasystray", NULL,
-	"nm-applet", NULL,
 	NULL /* terminate */
 };
 
@@ -200,6 +202,7 @@ static const int resizehints = 0;    /* 1 means respect size hints in tiled resi
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 static const int refreshrate = 120;  /* refresh rate (per second) for client move/resize */
 static const int refreshrate_placemouse = 60; /* refresh rate (per second) for placemouse */
+static const int refreshrate_dragcfact = 60; /* refresh rate (per second) for dragcfact */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -231,9 +234,10 @@ static const char *dmenucmd[] = {
 	"-nf", normfgcolor,
 	"-sb", selbgcolor,
 	"-sf", selfgcolor,
+	topbar ? NULL : "-b",
 	NULL
 };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "wm", "-t", NULL };
 
 /*
 * Xresources preferences to load at startup.
@@ -290,14 +294,27 @@ ResourcePref resources[] = {
 	{ "urgfloatcolor",          STRING,    &urgfloatcolor },
 };
 
+static const char *volup[] =  { "amixer", "-D", "pulse", "sset", "Master", "5%+", NULL};
+static const char *voldown[] =  { "amixer", "-D", "pulse", "sset", "Master", "5%-", NULL};
+static const char *micmute[] = { "amixer", "set", "'Capture", "Switch'", "toggle", NULL };
+static const char *lbres[] = { "lb", "-v", NULL };
+
 static const Key keys[] = {
 	/* modifier                     key            function                argument */
+
+	{ MODKEY|ControlMask,           XK_Return,     spawn,               {.v = termcmd } },
+	{ 0,                            XF86XK_AudioRaiseVolume, spawn,        {.v = volup } },
+        { 0,                            XF86XK_AudioLowerVolume, spawn,        {.v = voldown }},
+        { 0,                            XF86XK_AudioMicMute,     spawn,        {.v = micmute }},
+	{ MODKEY,                       XK_p,          spawn,                  {.v = lbres } },
+	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
 	{ MODKEY,                       XK_p,          spawn,                  {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return,     spawn,                  {.v = termcmd } },
 	{ MODKEY|ControlMask,           XK_p,          riospawnsync,           {.v = dmenucmd } },
 	{ MODKEY|ControlMask,           XK_Return,     riospawn,               {.v = termcmd } },
 	{ MODKEY,                       XK_s,          rioresize,              {0} },
 	{ MODKEY,                       XK_b,          togglebar,              {0} },
+	{ MODKEY|ShiftMask,             XK_b,          toggletopbar,           {0} },
 	{ MODKEY|ControlMask,           XK_space,      focusmaster,            {0} },
 	{ MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	{ MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
@@ -318,7 +335,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_h,          setcfact,               {.f = +0.25} },
 	{ MODKEY|ShiftMask,             XK_l,          setcfact,               {.f = -0.25} },
 	{ MODKEY|ShiftMask,             XK_o,          setcfact,               {0} },
+	{ MODKEY,                       XK_x,          transfer,               {0} },
 	{ MODKEY|ControlMask,           XK_r,          reorganizetags,         {0} },
+	{ MODKEY|ControlMask,           XK_d,          distributetags,         {0} },
 	{ MODKEY,                       XK_Return,     zoom,                   {0} },
 	{ MODKEY|Mod4Mask,              XK_u,          incrgaps,               {.i = +1 } },
 	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,          incrgaps,               {.i = -1 } },
@@ -343,6 +362,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_x,          killunsel,              {0} },
 	{ MODKEY|ShiftMask,             XK_r,          self_restart,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,          quit,                   {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_q,          quit,                   {1} },
 	{ MODKEY,                       XK_u,          focusurgent,            {0} },
 	{ MODKEY|ShiftMask,             XK_F5,         xrdb,                   {.v = NULL } },
 	{ MODKEY,                       XK_t,          setlayout,              {.v = &layouts[0]} },
@@ -361,6 +381,24 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period,     focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,      tagmon,                 {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period,     tagmon,                 {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_F1,         tagall,                 {.v = "F1"} },
+	{ MODKEY|ShiftMask,             XK_F2,         tagall,                 {.v = "F2"} },
+	{ MODKEY|ShiftMask,             XK_F3,         tagall,                 {.v = "F3"} },
+	{ MODKEY|ShiftMask,             XK_F4,         tagall,                 {.v = "F4"} },
+	{ MODKEY|ShiftMask,             XK_F5,         tagall,                 {.v = "F5"} },
+	{ MODKEY|ShiftMask,             XK_F6,         tagall,                 {.v = "F6"} },
+	{ MODKEY|ShiftMask,             XK_F7,         tagall,                 {.v = "F7"} },
+	{ MODKEY|ShiftMask,             XK_F8,         tagall,                 {.v = "F8"} },
+	{ MODKEY|ShiftMask,             XK_F9,         tagall,                 {.v = "F9"} },
+	{ MODKEY|ControlMask,           XK_F1,         tagall,                 {.v = "1"} },
+	{ MODKEY|ControlMask,           XK_F2,         tagall,                 {.v = "2"} },
+	{ MODKEY|ControlMask,           XK_F3,         tagall,                 {.v = "3"} },
+	{ MODKEY|ControlMask,           XK_F4,         tagall,                 {.v = "4"} },
+	{ MODKEY|ControlMask,           XK_F5,         tagall,                 {.v = "5"} },
+	{ MODKEY|ControlMask,           XK_F6,         tagall,                 {.v = "6"} },
+	{ MODKEY|ControlMask,           XK_F7,         tagall,                 {.v = "7"} },
+	{ MODKEY|ControlMask,           XK_F8,         tagall,                 {.v = "8"} },
+	{ MODKEY|ControlMask,           XK_F9,         tagall,                 {.v = "9"} },
 	{ MODKEY,                       XK_x,          movecenter,             {0} }, // note keybinding conflict with killunsel
 	TAGKEYS(                        XK_1,                                  0)
 	TAGKEYS(                        XK_2,                                  1)
@@ -396,6 +434,7 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,              Button1,        moveorplace,    {.i = 1} },
 	{ ClkClientWin,         MODKEY,              Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,              Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY|ShiftMask,    Button3,        dragcfact,      {0} },
 	{ ClkTagBar,            0,                   Button1,        view,           {0} },
 	{ ClkTagBar,            0,                   Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,              Button1,        tag,            {0} },
@@ -410,6 +449,7 @@ static const Signal signals[] = {
 	{ "focusstack",              focusstack },
 	{ "setmfact",                setmfact },
 	{ "togglebar",               togglebar },
+	{ "toggletopbar",            toggletopbar },
 	{ "incnmaster",              incnmaster },
 	{ "togglefloating",          togglefloating },
 	{ "focusmon",                focusmon },
@@ -418,6 +458,7 @@ static const Signal signals[] = {
 	{ "pushup",                  pushup },
 	{ "setcfact",                setcfact },
 	{ "movecenter",              movecenter },
+	{ "transfer",                transfer },
 	{ "tagmon",                  tagmon },
 	{ "zoom",                    zoom },
 	{ "incrgaps",                incrgaps },
@@ -465,6 +506,7 @@ static IPCCommand ipccommands[] = {
 	IPCCOMMAND( tag, 1, {ARG_TYPE_UINT} ),
 	IPCCOMMAND( tagmon, 1, {ARG_TYPE_UINT} ),
 	IPCCOMMAND( togglebar, 1, {ARG_TYPE_NONE} ),
+	IPCCOMMAND( toggletopbar, 1, {ARG_TYPE_NONE} ),
 	IPCCOMMAND( togglefloating, 1, {ARG_TYPE_NONE} ),
 	IPCCOMMAND( toggletag, 1, {ARG_TYPE_UINT} ),
 	IPCCOMMAND( toggleview, 1, {ARG_TYPE_UINT} ),
@@ -481,6 +523,7 @@ static IPCCommand ipccommands[] = {
 	IPCCOMMAND( pushup, 1, {ARG_TYPE_NONE} ),
 	IPCCOMMAND( self_restart, 1, {ARG_TYPE_NONE} ),
 	IPCCOMMAND( showhideclient, 1, {ARG_TYPE_NONE} ),
+	IPCCOMMAND( transfer, 1, {ARG_TYPE_NONE} ),
 	IPCCOMMAND( incrgaps, 1, {ARG_TYPE_SINT} ),
 	IPCCOMMAND( incrigaps, 1, {ARG_TYPE_SINT} ),
 	IPCCOMMAND( incrogaps, 1, {ARG_TYPE_SINT} ),
