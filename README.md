@@ -9,3 +9,5 @@ March 08/2026: it is currently only available for Arch Linux, but isn't too far 
 git clone https://github.com/nhkintact/.nhk ~/.nhk
 cd ~/.nhk/yr/ && chmod +x wm && ./wm -upk Arch
 ```
+
+March 09/2026: Testing the build inside of an Arch Linux virtual machine inside of Boxes. It is going well, but there are still issues with "command not found" errors, so I am chiseling away. 
