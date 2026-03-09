@@ -13,12 +13,6 @@ warp(const Client *c)
 		return;
 	}
 
-	if (cursor_hidden) {
-		mouse_x = c->x + c->w/2;
-		mouse_y = c->y + c->h/2;
-		return;
-	}
-
 	if (!getrootptr(&x, &y))
 		return;
 
