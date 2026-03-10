@@ -129,7 +129,7 @@ wideps() { # ignore this
 #            sudo zypper install -t pattern devel_basis && sudo zypper install libX11-devel libXft-devel libXinerama-devel xorg-x11-server xorg-x11-xinit
 #            ;;
 	"Arch") 
-            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pango pkgconf gobject-introspection lf xsel htop brightnessctl redshift rxvt-unicode rofi nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux webkit2gtk-4.1 gcr tmux nitrogen --noconfirm
+            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pango pkgconf gobject-introspection lf xsel htop brightnessctl redshift rxvt-unicode rofi nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux webkit2gtk-4.1 gcr tmux xorg-xsetroot --noconfirm
 	    git clone https://aur.archlinux.org/yay.git
 	    cd yay/ 
 	    makepkg -si 
