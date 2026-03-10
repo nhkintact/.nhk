@@ -102,7 +102,6 @@ static const char *const autostart[] = {
 	"dunst", NULL,
 	"slstatus", NULL,
 	"pasystray", NULL,
-	"nm-applet", NULL,
 	NULL /* terminate */
 };
 
