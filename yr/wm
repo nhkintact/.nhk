@@ -372,7 +372,7 @@ case "$1" in
     	;;
 
    -T) 
-	   wm -t nvim $WIDIR/src/.nhktutorial & 
+	   wm -t $LABYREDIT $WIDIR/src/.nhktutorial & 
 	   ;; 
 
    -P) 
