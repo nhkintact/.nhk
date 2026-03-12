@@ -16,4 +16,4 @@ cd ~/.nhk/yr/ && chmod +x wm && ./wm -upk Arch
 
 March 09/2026: Testing the build inside of an Arch Linux virtual machine inside of Boxes. It is going well, but there are still issues with "command not found" errors, so I am chiseling away. 
 
-March 11/2026: It is now completely installable on Arch Linux without a hitch, as the scaled-back dependencies save time and lessen the heavy lifting that the installer would need to do. I celebrated a bit, and forgot to update, but the recent version on GitHub is completely functional. 
+March 11/2026: It is now completely installable on Arch Linux without a hitch, as the scaled-back dependencies save time and lessen the heavy lifting that the installer would need to do. I celebrated a bit, and forgot to update, but the recent version on GitHub is completely functional in terms of installation. 
