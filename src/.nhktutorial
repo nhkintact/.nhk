@@ -1,0 +1,43 @@
+[Introduction] 
+
+Use / to find certain words.
+
+Much like Vim, nhk has its own functional modal interface for navigation, window and application management. The best thing to do is learn each of those paradigms in stages. You can think of the keybinding configurations applied by sxhkd as strata, where each stratum allows a different form of control over the system, depending on the type of task at hand. 
+
+In normal mode, every mode thereafter is accessible via the backslash key and the first letter of that mode's name. It's default configuration creates dual or singular keybindings for different commands, some of which allow control over the window manager. As stated above, it is best that the user breaks down these different window manager functions into isolated paradigms. 
+
+Start with learning window management. Practice moving windows, resizing the stacks, opening applications and exiting them.
+
+c- - ctrl.
+m- - alt. 
+s- - shift. 
+h- - hyper. 
+
+[Window Management] 
+
+S-F8 - night light (redshift).
+{1-9} - workspace
+j, k - shift cursor south or north.
+h, l - resize master window east or west.  
+c-j, c-k - resize client window south or north.
+J, K - shift window position south or north through window stack.
+space ; space - shift window position between master and client stack.
+c-w - hide topbar. 
+= - reset client window size. 
+x - initializes xkill. 
+d - close windows.
+Z ; Q - quit dwm.
+Z ; Z - rebuild dwm.
+ctrl + l - lock screen.
+ctrl + w - wallpaper manager (nitrogen).
+c-n - clear notifications. 
+c-N - iterate notifications.
+
+w - start (d)menu. 
+i - enter ins. all keys here work the same in, but only after the m-o prefix is pressed.  
+h - return to normal mode from ins. 
+
+[System] 
+
+S - shutdown the system. don't press it.
+R - reboot the system. don't press it. 
