@@ -46,15 +46,6 @@ alt + {j,k}
  
 alt + o ; {j,k}
  dwmc focusstack {+,-}1
- 
-# alt + o ; {h,l}
-#  dwmc setmfact {-,+}1.1
- 
-# shift + space ; {u,i}
-#  dwmc setcfact {-,+}0.85
-
-# shift + space ; o 
-#  dwmc setcfact
 
 alt + o ; {ctrl + grave}
  dwmc setlayoutex {8,0}
@@ -123,7 +114,7 @@ alt + o ; {n,N}
  dunstctl {close-all,history-pop}
 
 # [tools]
-# [] checking email (mutt)
+# [x] checking email (aerc)
 
 Print ; i
  wm -ss
@@ -143,9 +134,6 @@ Print ; u
 Print ; v
  dm-record
 
-Print ; c
- wiconv
-
 Print ; p
  wm -t clipse
 
@@ -158,20 +146,11 @@ alt + r
 alt + o ; {b,B}
  wm -b
 
-alt + o ; {semicolon, colon}
- mullvad-browser $(xsel -b)
-
-alt + o ; p
- qutebrowser "$(xsel -b)"
-
 alt + q ; d
  gnome-dictionary
 
 alt + q ; f
- wm -t ranger
-
-alt + q ; n
- wm -t newsboat
+ dmenufm -p 
 
 alt + q ; m 
  wm -E aerc
@@ -179,27 +158,15 @@ alt + q ; m
 alt + q ; c 
  equibop 
 
-alt + q ; C 
- rog-control-center ; rog-control-center ; rog-control-center 
-
 alt + q ; k
  kpmenu
 
-alt + o ; backslash ; colon
- rofi -show drun
-
 # [productivity]  
-
-alt + q ; d 
- python ~/cmdlaunch.py "python ~/t/t.py --task-dir ~/tasks --list tasks -d" 
-
-alt + o ; t 
- spmenu -m
 
 alt + o ; F
  wm -se
 
-alt + o ; shift + 3
+alt + o ; N
  wm -t nmtui
 
 # [system]
@@ -216,10 +183,10 @@ alt + o ; exclam
 alt + o ; x 
  lb -v && xkill && lb -i
 
-alt + o ; P 
- python ~/cmdlaunch.py "pkill -f" 
-
 # [config]
 
 alt + o ; comma
  lb -e
+
+alt + o ; question
+ wm -T

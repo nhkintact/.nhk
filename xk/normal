@@ -1,4 +1,4 @@
-# lb is a modal interface overlay for widow. 
+/mG# lb is a modal interface overlay for widow. 
 # need ability to quickly send any one key or macro before returning to normal
 
 # [lb]
@@ -71,12 +71,6 @@ space ; {g ; g,G}
 {g ; g,G}
  dwmc viewex {0,8}
 
-ctrl + w ; n 
- dwmc nametag
-
-ctrl + w ; shift + 4 
- dwmc togglesticky
-
 shift + grave
  dwmc togglemax
 
@@ -91,9 +85,6 @@ F11
 
 shift + F8
  redshift {-O 2444,-x}
-
-ctrl + w ; {j,k}
- dwmc rotatestack 1{+,-}
 
 {J,K}
  dwmc {pushdown,pushup}
@@ -114,7 +105,7 @@ ctrl + W
  dwmc togglebar
 
 shift + 1
- pulsar-termrun
+ 
 
 #c ; f
 # lb -i && python ~/cmdlaunch.py "pkill -f" && python ~/cmdlaunch.py -n ""
@@ -222,11 +213,11 @@ o ; w
  nitrogen
 
 o ; f
- dmenufm -t
+ dmenufm -p
 
 o ; semicolon
  mullvad-browser "$(xsel -b)"
-
+wm 
 o ; comma
  wm -t wm -EE  ~/.nhk/src/config.h
 
@@ -277,6 +268,9 @@ o ; a
 
 o ; v
  wm -t neo-matrix
+
+question
+ wm -T
 
 # need actual marking functionality.
 # $ometing need$ to allow u to mark a currently open file into the nromal mode config for being launched with grave then the letter.
