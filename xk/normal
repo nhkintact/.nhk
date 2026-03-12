@@ -115,7 +115,7 @@ c ; w
 
 ctrl + n
  dunstctl close-all
-
+G
 ctrl + N 
  dunstctl history-pop
 
@@ -166,6 +166,15 @@ o ; a
 comma
  lb -e
 
+ctrl + comma 
+ wm -t wm -EE
+
+ctrl + shift +  comma
+ wm -t wm -EE  ~/.nhk/src/config.h
+ 
+shift + comma
+ lb -i && wm -t wm -rb
+
 shift + 8
  wm -t wm -t
 
@@ -203,7 +212,8 @@ Print ; w
 z ; r
  wm -ar
 
-t
+# terminal
+t 
  wm -t 
 
 {F7,F8}
@@ -217,12 +227,6 @@ o ; f
 
 o ; semicolon
  mullvad-browser "$(xsel -b)"
-wm 
-o ; comma
- wm -t wm -EE  ~/.nhk/src/config.h
-
-Z ; Z
- lb -i && wm -t wm -rb
 
 colon ; w
  lb -i && wm -t wm -rb
