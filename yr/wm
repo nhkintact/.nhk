@@ -225,6 +225,54 @@ case "$1" in
 	fi
 	;;
 
+	-d)
+
+
+	MONITOR=$(xrandr --query | grep " connected" | awk '{print $1}')
+	PRIMARY=$(xrandr --query | grep " connected primary" | awk '{print $1}')
+	
+	SEL=$(echo "$MONITOR" | dmenu -i -fn 'Terminus:pixelsize=10:antialias=true' -nb black -nf white -sb white -sf black -p "::disp")
+	[ -z "$SEL" ] && exit 0
+	
+	ACTION=$(echo -e "direction\nref.rate\nscale" | dmenu -i -fn 'Terminus:pixelsize=10:antialias=true' -nb black -nf white -sb white -sf black -p "::action")
+	[ -z "$ACTION" ] && exit 0
+	
+	case "$ACTION" in
+	    direction)
+	        POSITION=$(echo -e "Left\nRight\nAbove\nBelow\nMirror\nOnly" | dmenu -i -fn 'Terminus:pixelsize=10:antialias=true' -nb black -nf white -sb white -sf black -p "::pos")
+	        [ -z "$POSITION" ] && exit 0
+	        case "$POSITION" in
+	            Left|Right|Above|Below) xrandr --output "$SEL" --auto "--${POSITION,,}-of" "$PRIMARY" ;;
+	            Mirror) xrandr --output "$SEL" --auto --same-as "$PRIMARY" ;;
+	            Only) xrandr --output "$SEL" --auto && for m in $MONITOR; do [ "$m" != "$SEL" ] && xrandr --output "$m" --off; done ;;
+	        esac
+	        ;;
+	    "ref.rate")
+	        RATES=$(xrandr --query | grep -A 100 "^$SEL connected" | grep -oP '\d+\.\d+(?=\*)?' | sort -u)
+	        [ -z "$RATES" ] && exit 0
+	        RATE=$(echo "$RATES" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::rate")
+	        [ -z "$RATE" ] && exit 0
+	        xrandr --output "$SEL" --rate "$RATE"
+	        ;;
+	    scale)
+	        SCALE_OPTION=$(echo -e "custom\n0.5x\n0.75x\n1.0x (Normal)\n1.25x\n1.5x\n2.0x" | dmenu -i -fn 'Terminus:pixelsize=10:antialias=true' -nb black -nf white -sb white -sf black -p "::scale")
+	        [ -z "$SCALE_OPTION" ] && exit 0
+	        
+	        case "$SCALE_OPTION" in
+	            "custom value")
+	                CUSTOM=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10:antialias=true' -nb black -nf white -sb white -sf black -p "::value")
+	                [ -z "$CUSTOM" ] && exit 0
+	                xrandr --output "$SEL" --scale "$CUSTOM"
+	                ;;
+	            *)
+	                SCALE=$(echo "$SCALE_OPTION" | grep -oP '^\d+\.?\d*')
+	                xrandr --output "$SEL" --scale "$SCALE"
+	                ;;
+	        esac
+	        ;;
+	esac
+    ;;
+
     -b)
 	#while true; do
 	    QRY=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::url")
