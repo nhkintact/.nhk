@@ -35,7 +35,7 @@ c-N - iterate notifications.
 
 w - start (d)menu. 
 i - enter ins. all keys here work the same in, but only after the m-o prefix is pressed.  
-h - return to normal mode from ins. 
+hyper - return to normal mode from ins. 
 
 [System] 
 
