@@ -2,7 +2,7 @@
 LABYRTERM="urxvt"
 LABYRMU="$LABYRTERM -e ncmpcpp"
 LABYREDIT="$LABYRTERM -e nvim"
-LABYRWEB="surf"
+LABYRWEB="mullvad-browser"
 LABYREDIT="nvim"
 LABYRCHAT="equibop"
 LABYRMAIL="claws-mail"
@@ -129,7 +129,7 @@ wideps() { # ignore this
 #            sudo zypper install -t pattern devel_basis && sudo zypper install libX11-devel libXft-devel libXinerama-devel xorg-x11-server xorg-x11-xinit
 #            ;;
 	"Arch") 
-            sudo pacman -S base-devel cairo libx11 libxft feh libxinerama git python pango pkgconf gobject-introspection lf xsel htop brightnessctl redshift rxvt-unicode rofi nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux webkit2gtk-4.1 gcr tmux xorg-xsetroot --noconfirm
+            sudo pacman -S base-devel cairo libx11 libxft libxinerama git python pango pkgconf gobject-introspection lf xsel htop brightnessctl redshift rxvt-unicode rofi nvim libwnck3 yajl freetype2 shotgun xorg-xclipboard terminus-font ueberzug tmux webkit2gtk-4.1 gcr tmux xorg-xsetroot --noconfirm
 	    git clone https://aur.archlinux.org/yay.git
 	    cd yay/ 
 	    makepkg -si 
@@ -226,7 +226,7 @@ case "$1" in
 	;;
 
     -b)
-	while true; do
+	#while true; do
 	    QRY=$(echo "" | dmenu -i -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -p "::url")
 	
 	    if [[ ! -z $QRY ]]; then
@@ -259,7 +259,7 @@ case "$1" in
 		$LABYRWEB &
 	        break
 	    fi
-    done
+    #done
 	;;
 	
     -w)
@@ -371,6 +371,10 @@ case "$1" in
 
     	;;
 
+   -T) 
+	   wm -t nvim $WIDIR/src/.nhktutorial & 
+	   ;; 
+
    -P) 
 	   OPT=$(echo "" | dmenu -fn 'Terminus:pixelsize=10' -nb black -nf white -sb white -sf black -i -p "::del")
 	   if [[ -z $QRY ]]; then
@@ -403,20 +407,20 @@ case "$1" in
   -upk)  
 	 wideps $2
    	 cd $WIDIR/src/xtr
-	 cd dmenu/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/dmenu/ && make -j4 && sudo make install
 	 cd ..
-	 cd slock/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/lock/ && make -j4 && sudo make install
 	 cd ..
-	 cd nsxiv/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/nsxiv/ && make -j4 && sudo make install
 	 cd ..
-	 cd dunst/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/dunst/ && make -j4 && sudo make install
 	 cd ..
-	 cd sxhkd/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/sxhkd/ && make -j4 && sudo make install
 	 cd ..
-	 cd slstatus/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/slstatus/ && make -j4 && sudo make install
 	 cd ..
-	 cd surf/ && make -j4 && sudo make install
-	 cd wyebadblock/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/surf/ && make -j4 && sudo make install
+	 cd $WIDIR/src/xtr/surf/wyebadblock/ && make -j4 && sudo make install
 	 sudo mkdir /usr/local/lib/surf && sudo ln -s /usr/lib/wyebrowser/adblock.so /usr/local/lib/surf
 	 cd $WIDIR
 	 mkdir -p $HOME/.config/nhk
@@ -452,7 +456,7 @@ case "$1" in
 	 sudo cp -rv $WIDIR/src/nhk.desktop /usr/share/xsessions/
 	 sudo chmod +x patch/dwmc
 	 sudo cp -rv patch/dwmc /usr/bin/dwmc
-	 cd $WIDIR 
+	 cd $WIDIR
          ;;
 
    -rb)
