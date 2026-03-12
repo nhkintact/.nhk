@@ -1,6 +1,6 @@
 [Introduction] 
 
-Use / to find certain words.
+Use / or ? to find certain words in this file, if you've never used vim before... for some reason...
 
 Much like Vim, nhk has its own functional modal interface for navigation, window and application management. The best thing to do is learn each of those paradigms in stages. You can think of the keybinding configurations applied by sxhkd as strata, where each stratum allows a different form of control over the system, depending on the type of task at hand. 
 
@@ -13,7 +13,11 @@ m- - alt.
 s- - shift. 
 h- - hyper. 
 
-[Window Management] 
+---------------------------
+
+## [Window Management] 
+
+? - Opens Tutorial
 
 S-F8 - night light (redshift).
 {1-9} - workspace
@@ -33,11 +37,29 @@ ctrl + w - wallpaper manager (nitrogen).
 c-n - clear notifications. 
 c-N - iterate notifications.
 
+
+
+## [Configuration] 
+
+comma - current keybinding stratum's configuration. (m-comma in ins mode does the same.) 
+c-comma - settings manager (wm -EE).
+s-comma - rebuild dwm.
+c-s-comma - edit dwm configuration.
+
+## [Application]
+
 w - start (d)menu. 
 i - enter ins. all keys here work the same in, but only after the m-o prefix is pressed.  
 hyper - return to normal mode from ins. 
 
-[System] 
+## [System] 
 
 S - shutdown the system. don't press it.
 R - reboot the system. don't press it. 
+
+
+---------------------------
+
+[wm] 
+
+wm, which means window manager, is a (currently oversized) bash script meant to both ease the process of editing keybinding strata and allow for centralized and scriptable management of default software. on the surface, it seems like moon runes, especially to a novice user. the user isn't required to learn bash in order to use the script. at the top, there are variables set which allow default programs to be swapped on the fly, display management, . therefore, you can begin think of wm as the settings manager. 
