@@ -102,7 +102,7 @@ static const char *const autostart[] = {
 	"dunst", NULL,
 	"slstatus", NULL,
 	"pasystray", NULL,
-	"wm", "-t", "~/.nhk/src/.nhktutorial", NULL,
+	"wm", "-T", NULL,
 	NULL /* terminate */
 };
 
